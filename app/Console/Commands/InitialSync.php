@@ -83,7 +83,7 @@ class InitialSync extends Command
 
         //push only the new Blocks to the processing queue
         for ($i = $localBlockHeight + 1; $i <= $currentBlockchainHeight; $i++) {
-            ProcessRemoteBlock::dispatch($i)->onQueue('blockchainCrawler');
+            ProcessRemoteBlock::dispatch($i)->onQueue('InitialBlockchainCrawler');
         }
 
     }

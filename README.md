@@ -1,79 +1,117 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+<p align="center"><img src="https://avatars0.githubusercontent.com/u/64492989?s=200&v=4" width="150"></p>
 
 <p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>
 
-## About Laravel
+## About NKN open API
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The NKN open API is a blockchain-to-database parser with an easy to use interface written in PHP. We're using [Laravel](https://laravel.com/) as our framework to provide a clean and maintainable code.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This API gives you all the handy features you need to code your app such as:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- History queries of all ever created blocks
+- Already parsed and human readable payloads
+- A websocket interface to pub/sub to latest block updates
+- and many more
 
-## Learning Laravel
+You can also host NKN open API by yourself!
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## I don't want to host it by myself - how can I get started fast?
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+If you want to jump right into app developing it's a good idea to check out our documentation. All api endpoints are already documented here.
 
-## Laravel Sponsors
+Missing a feature? Just create an Issue for that and we'll implement it!
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Prerequisities
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
-- [云软科技](http://www.yunruan.ltd/)
+If you want to host your own NKN API by yourself you at least need
+
+- [Composer](https://getcomposer.org/) installed
+- At least PHP 7.2.5
+-- redis extension
+-- memcached extension
+- [PostgreSQL](https://www.postgresql.org/) database server
+- A [Redis](https://redis.io/) database for queues
+- (optional) [Memcached](https://memcached.org/) for effective caching
+
+If you're not that much into setting your system up you can always use a virtual machine with [Laravel Homestead](https://laravel.com/docs/master/homestead) if you're on Windows/Linux or [Laravel Valet](https://laravel.com/docs/master/valet) when you're on a Mac.
+
+## Getting started
+
+
+#### 1. Install dependencies
+Run ``composer install``to install all dependencies
+
+#### 2. Setup .env file
+Create a file called ``.env`` with the basic variables (Change them to your needs):
+
+```
+APP_NAME="NKN Open API"
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=YOUR_URL_HERE
+
+LOG_CHANNEL=stack
+
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=PGSQL_DB_NAME
+DB_USERNAME=PGSQL_USER_NAME
+DB_PASSWORD=PGSQL_USER_PASSWORD
+
+BROADCAST_DRIVER=pusher
+CACHE_DRIVER=memcached
+QUEUE_CONNECTION=redis
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=REDIS_PASSWORD
+REDIS_PORT=6379
+
+PUSHER_APP_ID=RANDOM_APP_ID 
+PUSHER_APP_KEY=RANDOM_APP_KEY
+PUSHER_APP_SECRET=RANDOM_APP_SECRET
+PUSHER_APP_CLUSTER="mt1"
+
+
+UPDATEINTERVAL = 20
+REMOTENODE_ADDR = PUBLIC_NODE_ADDR (f.e. 'http://mainnet-seed-0010.nkn.org')
+REMOTENODE_PORT = 30003
+
+
+```
+
+You can also just rename ``.env.example`` to get the configurations of the public available API.
+
+#### 3. Create your App-Key 
+```php artisan key:generate```
+
+#### 4. Setup the database structure
+ ```php artisan migrate```
+
+#### 5. Start background services 
+##### 5.1 Start the scheduler
+ ```php artisan horizon```
+
+##### 5.2 Start the websocket-server
+ ```php artisan websockets:serve```
+
+#### 6. Run the first blockchain sync (takes a looooong time)
+```php artisan blockchain:init```
+
+#### 7. Setup a regular cronjob for job parsing
+Setup an "every minute" job that runs ```php artisan schedule:run``` to get regular updates in time.
+
+
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Wow! That is very nice of you! The contribution guide will come shortly. Meanwhile join us on the [official NKN Discord channel](https://discord.gg/skHx9S) and let us know your thoughts.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The NKN open API is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

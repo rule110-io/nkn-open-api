@@ -73,6 +73,13 @@ return [
             'retry_after' => 10, // Run for max 10 seconds
             'block_for' => null,
         ],
+        'redis-initialBlockchainCrawler' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => 'initialBlockchainCrawler',
+            'retry_after' => 10, // Run for max 10 seconds
+            'block_for' => null,
+        ]
     ],
 
     /*
