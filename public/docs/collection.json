@@ -1,0 +1,603 @@
+{
+    "variables": [],
+    "info": {
+        "name": "NKN Open API API",
+        "_postman_id": "6a69a302-5795-4b15-b66b-ad167efed844",
+        "description": "",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.0.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Address book",
+            "description": "\nEndpoints for querying registered names in the NKN blockchain",
+            "item": [
+                {
+                    "name": "Get all registered wallet names",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/address-book",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "4",
+                                    "description": "Number of results per page",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "The page you want to return",
+                                    "disabled": false
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns paginated list of all registered wallet names, the registrants public key and the associated wallet address.",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Get names by address",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/address-book\/address\/:walletAddress",
+                            "query": [],
+                            "variable": [
+                                {
+                                    "id": "walletAddress",
+                                    "key": "walletAddress",
+                                    "value": "NKNXXXXXGKct2cZuhSGW6xqiqeFVd5nJtAzg",
+                                    "description": "The wallet address."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns the names associated to specific wallet address",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Get address by name",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/address-book\/name\/:walletName",
+                            "query": [],
+                            "variable": [
+                                {
+                                    "id": "walletName",
+                                    "key": "walletName",
+                                    "value": "ChrisT_NKNx",
+                                    "description": "The wallet name."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns the address of a specific name",
+                        "response": []
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Addresses",
+            "description": "\nEndpoints for address-based queries",
+            "item": [
+                {
+                    "name": "Get all addresses",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/addresses",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "4",
+                                    "description": "Number of results per page",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "The page you want to return",
+                                    "disabled": false
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns paginated list of all addresses",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Get single address by height\/hash",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/addresses\/:address",
+                            "query": [],
+                            "variable": [
+                                {
+                                    "id": "address",
+                                    "key": "address",
+                                    "value": "NKNXXXXXGKct2cZuhSGW6xqiqeFVd5nJtAzg",
+                                    "description": "The wallet address."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns a specific block based on the height or block hash",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Get Address transactions",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/addresses\/:address\/transactions",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "4",
+                                    "description": "Number of results per page",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "The page you want to return",
+                                    "disabled": false
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "id": "address",
+                                    "key": "address",
+                                    "value": "NKNXXXXXGKct2cZuhSGW6xqiqeFVd5nJtAzg",
+                                    "description": "The wallet address."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns paginated list of all transactions of an address",
+                        "response": []
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Blocks",
+            "description": "\nEndpoints for block-based queries",
+            "item": [
+                {
+                    "name": "Get all blocks",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/blocks",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "4",
+                                    "description": "Number of results per page",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "The page you want to return",
+                                    "disabled": false
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns a paginated list of all blocks with corresponding headers, average block size and sum of all blocks starting with the latest one.",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Get single block by height\/hash",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/blocks\/:block_id",
+                            "query": [],
+                            "variable": [
+                                {
+                                    "id": "block_id",
+                                    "key": "block_id",
+                                    "value": "1000000",
+                                    "description": "Hash or height of the block"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns a specific block based on the height or block hash",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Get transactions",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/blocks\/:block_id\/transactions",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "4",
+                                    "description": "Number of results per page",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "The page you want to return",
+                                    "disabled": false
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "id": "block_id",
+                                    "key": "block_id",
+                                    "value": "1000000",
+                                    "description": "Hash or height of the block"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns a paginated list of all transactions of a specific block based on the height or block hash",
+                        "response": []
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Statistics",
+            "description": "\nEndpoints for overall statistics queries",
+            "item": [
+                {
+                    "name": "Blocks per Day",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/statistics\/daily\/blocks",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns block count for the last 14 days.",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Transactions per day",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/statistics\/daily\/transactions",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns transaction count for the last 14 days.",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Average transaction fee",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/statistics\/avgtxfee",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns the average transaction fee of the latest 200 transactions.",
+                        "response": []
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Transactions",
+            "description": "\nEndpoints for querying transactions",
+            "item": [
+                {
+                    "name": "Get all transactions",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/transactions",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "4",
+                                    "description": "Number of results per page",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "txType",
+                                    "value": "",
+                                    "description": "Filter results by txType - single or comma separated.",
+                                    "disabled": true
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns all transactions with corresponding block, payloads, outputs, inputs and attributes in simple pagination format starting with the latest one",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Get single transaction by hash",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/transactions\/:tHash",
+                            "query": [],
+                            "variable": [
+                                {
+                                    "id": "tHash",
+                                    "key": "tHash",
+                                    "value": "dc5a95f9739ee386f4179bb463846532608efb82db1e504b64ff3b718cc58572",
+                                    "description": "Hash of the Transaction"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns a specific block based on the height or block hash",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Get Transaction payload",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/transactions\/:tHash\/payload",
+                            "query": [],
+                            "variable": [
+                                {
+                                    "id": "tHash",
+                                    "key": "tHash",
+                                    "value": "dc5a95f9739ee386f4179bb463846532608efb82db1e504b64ff3b718cc58572",
+                                    "description": "Hash of the Transaction"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns the payload data of a transaction",
+                        "response": []
+                    }
+                }
+            ]
+        }
+    ]
+}
