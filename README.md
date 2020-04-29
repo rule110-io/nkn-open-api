@@ -30,10 +30,8 @@ If you want to host your own NKN API by yourself you at least need
 - [Composer](https://getcomposer.org/) installed
 - At least PHP 7.2.5
 -- redis extension
--- memcached extension
 - [PostgreSQL](https://www.postgresql.org/) database server
 - A [Redis](https://redis.io/) database for queues
-- (optional) [Memcached](https://memcached.org/) for effective caching
 
 If you're not that much into setting your system up you can always use a virtual machine with [Laravel Homestead](https://laravel.com/docs/master/homestead) if you're on Windows/Linux or [Laravel Valet](https://laravel.com/docs/master/valet) when you're on a Mac.
 
