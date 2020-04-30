@@ -45,10 +45,7 @@
             "Protos\\": "protobuf/compile/Protos",
             "GPBMetadata\\Protobuf\\Protos\\": "protobuf/compile/GPBMetadata/Protobuf/Protos"
         },
-        "classmap": [
-            "database/seeds",
-            "database/factories"
-        ]
+        "classmap": []
     },
     "autoload-dev": {
         "psr-4": {
