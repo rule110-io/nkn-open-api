@@ -77,7 +77,7 @@ PUSHER_APP_CLUSTER="mt1"
 
 
 UPDATEINTERVAL = 20
-REMOTENODE_ADDR = PUBLIC_NODE_ADDR (f.e. 'http://mainnet-seed-0010.nkn.org')
+REMOTENODE_ADDR = PUBLIC_NODE_ADDR (f.e. 'https://mainnet-rpc-node-0001.nkn.org/mainnet/api/wallet', better results with a local node)
 REMOTENODE_PORT = 30003
 
 
