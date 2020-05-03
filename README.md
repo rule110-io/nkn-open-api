@@ -28,6 +28,7 @@ Missing a feature? Just create an Issue for that and we'll implement it!
 If you want to host your own NKN API by yourself you at least need
 
 - [Composer](https://getcomposer.org/) installed
+- A configured web server ([Nginx](https://www.howtoforge.com/tutorial/ubuntu-laravel-php-nginx/) or [Apache](https://www.howtoforge.com/tutorial/install-laravel-on-ubuntu-for-apache/))
 - At least PHP 7.2.5
 -- redis extension
 - [PostgreSQL](https://www.postgresql.org/) database server
@@ -61,7 +62,7 @@ DB_USERNAME=PGSQL_USER_NAME
 DB_PASSWORD=PGSQL_USER_PASSWORD
 
 BROADCAST_DRIVER=pusher
-CACHE_DRIVER=memcached
+CACHE_DRIVER=redis
 QUEUE_CONNECTION=redis
 SESSION_DRIVER=file
 SESSION_LIFETIME=120
