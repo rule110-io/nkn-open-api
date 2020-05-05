@@ -92,7 +92,7 @@ class SyncWithBlockChain extends Command
 
                     //push only the new Blocks to the processing queue
                     for ($i = $localBlockHeight + 1; $i <= $currentBlockchainHeight; $i++) {
-                        ProcessRemoteBlock::dispatch($i)->onQueue('blockchainCrawler');
+                        ProcessRemoteBlock::dispatch($i,true)->onQueue('blockchainCrawler');
                     }
             }
             time_sleep_until($dt->addSeconds($seconds)->timestamp);
