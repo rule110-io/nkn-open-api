@@ -54,7 +54,7 @@ class ProcessRemoteBlock implements ShouldQueue
     public function __construct($blockheight, $ws_enabled)
     {
         $this->blockheight = $blockheight;
-        $this->ws_enabled = isset($ws_enabled) ? $ws_enabled : true;
+        $this->ws_enabled = $ws_enabled;
     }
 
     /**
