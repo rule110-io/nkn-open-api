@@ -45,14 +45,16 @@ class ProcessRemoteBlock implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     protected $blockheight;
+    protected $ws_enabled;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($blockheight)
+    public function __construct($blockheight, $ws_enabled)
     {
         $this->blockheight = $blockheight;
+        $this->ws_enabled = isset($ws_enabled) ? $ws_enabled : true;
     }
 
     /**
@@ -100,8 +102,9 @@ class ProcessRemoteBlock implements ShouldQueue
             ->with(['header:block_id,height,signerPk,wallet,benificiaryWallet,created_at'])
             ->first();
             $block_event->transactions_count = count($response["result"]["transactions"]);
-
-            event(new BlockEvent($block_event));
+            if ($this->ws_enabled){
+                event(new BlockEvent($block_event));
+            }
 
 
             foreach ($response["result"]["transactions"] as $transaction) {
@@ -144,8 +147,10 @@ class ProcessRemoteBlock implements ShouldQueue
                             $transaction_obj->payload()->save($payload_obj);
 
                             // WebSocket Events
-                            $payload_obj->txHash = $transaction_obj->hash;
-                            event(new CoinbaseTxEvent($payload_obj));
+                            if ($this->ws_enabled){
+                                $payload_obj->txHash = $transaction_obj->hash;
+                                event(new CoinbaseTxEvent($payload_obj));
+                            }
 
                         } catch (\Exception $e) {
                             Log::channel('syncWithBlockchain')->error("Error processing [COINBASE_TYPE] payloadData: " . $transaction["payloadData"]);
@@ -173,8 +178,10 @@ class ProcessRemoteBlock implements ShouldQueue
                             $transaction_obj->payload()->save($payload_obj);
 
                             // WebSocket Events
-                            $payload_obj->txHash = $transaction_obj->hash;
-                            event(new TransferAssetTxEvent($payload_obj));
+                            if ($this->ws_enabled){
+                                $payload_obj->txHash = $transaction_obj->hash;
+                                event(new TransferAssetTxEvent($payload_obj));
+                            }
 
                         } catch (\Exception $e) {
                             Log::channel('syncWithBlockchain')->error("Error processing [TRANSFER_ASSET_TYPE] payloadData: " . $transaction["payloadData"]);
@@ -230,8 +237,10 @@ class ProcessRemoteBlock implements ShouldQueue
                                 }
 
                                 // WebSocket Events
-                                $payload_obj->txHash = $transaction_obj->hash;
-                                event(new SigChainTxEvent($payload_obj));
+                                if ($this->ws_enabled){
+                                    $payload_obj->txHash = $transaction_obj->hash;
+                                    event(new SigChainTxEvent($payload_obj));
+                                }
                             } catch (\Exception $e) {
                                 Log::channel('syncWithBlockchain')->error("Error processing sigchainElems: " . $transaction["payloadData"]);
                             }
@@ -274,8 +283,10 @@ class ProcessRemoteBlock implements ShouldQueue
                             ]);
 
                             // WebSocket Events
-                            $payload_obj->txHash = $transaction_obj->hash;
-                            event(new RegisterNameTxEvent($payload_obj));
+                            if ($this->ws_enabled){
+                                $payload_obj->txHash = $transaction_obj->hash;
+                                event(new RegisterNameTxEvent($payload_obj));
+                            }
 
                         } catch (\Exception $e) {
                             Log::channel('syncWithBlockchain')->error("Error processing [REGISTER_NAME_TYPE] payloadData: " . $transaction["payloadData"]);
@@ -323,8 +334,10 @@ class ProcessRemoteBlock implements ShouldQueue
                             Cache::forget('addressBookItem-name-' . $asciiName);
 
                             // WebSocket Events
-                            $payload_obj->txHash = $transaction_obj->hash;
-                            event(new TransferNameTxEvent($payload_obj));
+                            if ($this->ws_enabled){
+                                $payload_obj->txHash = $transaction_obj->hash;
+                                event(new TransferNameTxEvent($payload_obj));
+                            }
 
                         } catch (\Exception $e) {
                             Log::channel('syncWithBlockchain')->error("Error processing [TRANSFER_NAME_TYPE] payloadData: " . $transaction["payloadData"]);
@@ -361,8 +374,10 @@ class ProcessRemoteBlock implements ShouldQueue
                             Cache::forget('addressBookItem-name-' . $asciiName);
 
                             // WebSocket events
-                            $payload_obj->txHash = $transaction_obj->hash;
-                            event(new DeleteNameTxEvent($payload_obj));
+                            if ($this->ws_enabled){
+                                $payload_obj->txHash = $transaction_obj->hash;
+                                event(new DeleteNameTxEvent($payload_obj));
+                            }
 
                         } catch (\Exception $e) {
                             Log::channel('syncWithBlockchain')->error("Error processing [DELETE_NAME_TYPE] payloadData: " . $transaction["payloadData"]);
@@ -396,8 +411,10 @@ class ProcessRemoteBlock implements ShouldQueue
                             $transaction_obj->payload()->save($payload_obj);
 
                             // WebSocket Events
-                            $payload_obj->txHash = $transaction_obj->hash;
-                            event(new SubscribeTxEvent($payload_obj));
+                            if ($this->ws_enabled){
+                                $payload_obj->txHash = $transaction_obj->hash;
+                                event(new SubscribeTxEvent($payload_obj));
+                            }
 
                         } catch (\Exception $e) {
                             Log::channel('syncWithBlockchain')->error("Error processing [SUBSCRIBE_TYPE] payloadData: " . $transaction["payloadData"]);
@@ -428,8 +445,10 @@ class ProcessRemoteBlock implements ShouldQueue
                             $transaction_obj->payload()->save($payload_obj);
 
                             // WebSocket Events
-                            $payload_obj->txHash = $transaction_obj->hash;
-                            event(new UnsubscribeTxEvent($payload_obj));
+                            if ($this->ws_enabled){
+                                $payload_obj->txHash = $transaction_obj->hash;
+                                event(new UnsubscribeTxEvent($payload_obj));
+                            }
 
                         } catch (\Exception $e) {
                             Log::channel('syncWithBlockchain')->error("Error processing [UNSUBSCRIBE_TYPE] payloadData: " . $transaction["payloadData"]);
@@ -449,8 +468,10 @@ class ProcessRemoteBlock implements ShouldQueue
                             $transaction_obj->payload()->save($payload_obj);
 
                             // WebSocket Events
-                            $payload_obj->txHash = $transaction_obj->hash;
-                            event(new GenerateIdTxEvent($payload_obj));
+                            if ($this->ws_enabled){
+                                $payload_obj->txHash = $transaction_obj->hash;
+                                event(new GenerateIdTxEvent($payload_obj));
+                            }
 
                         } catch (\Exception $e) {
                             Log::channel('syncWithBlockchain')->error("Error processing [GENERATE_ID_TYPE] payloadData: " . $transaction["payloadData"]);
@@ -480,8 +501,10 @@ class ProcessRemoteBlock implements ShouldQueue
                             $transaction_obj->payload()->save($payload_obj);
 
                             // WebSocket Events
-                            $payload_obj->txHash = $transaction_obj->hash;
-                            event(new NanoPayTxEvent($payload_obj));
+                            if ($this->ws_enabled){
+                                $payload_obj->txHash = $transaction_obj->hash;
+                                event(new NanoPayTxEvent($payload_obj));
+                            }
 
                         } catch (\Exception $e) {
                             Log::channel('syncWithBlockchain')->error("Error processing [NANO_PAY_TYPE] payloadData: " . $transaction["payloadData"]);
@@ -504,8 +527,10 @@ class ProcessRemoteBlock implements ShouldQueue
                             $transaction_obj->payload()->save($payload_obj);
 
                             // WebSocket Events
-                            $payload_obj->txHash = $transaction_obj->hash;
-                            event(new IssueAssetTxEvent($payload_obj));
+                            if ($this->ws_enabled){
+                                $payload_obj->txHash = $transaction_obj->hash;
+                                event(new IssueAssetTxEvent($payload_obj));
+                            }
 
                         } catch (\Exception $e) {
                             Log::channel('syncWithBlockchain')->error("Error processing payloadData: " . $transaction["payloadData"]);
