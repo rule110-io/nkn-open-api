@@ -201,7 +201,7 @@ return [
                 'queue' => ['default'],
                 'balance' => 'simple',
                 'memory' => 128,
-                'processes' => 10,
+                'processes' => 1,
                 'tries' => 3,
                 'timeout' => 60 // Timeout after 60 seconds
             ],
@@ -219,7 +219,7 @@ return [
                 'queue' => ['initialBlockchainCrawler'],
                 'balance' => 'simple',
                 'memory' => 128,
-                'processes' => 50,
+                'processes' => 97,
                 'tries' => 3,
                 'timeout' => 60 // Timeout after 60 seconds
             ]

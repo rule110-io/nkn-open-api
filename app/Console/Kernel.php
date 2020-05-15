@@ -27,13 +27,13 @@ class Kernel extends ConsoleKernel
     {
 
         // The main command that syncs the latest blockchain items
-        //$schedule->command('blockchain:sync')->everyMinute()->runInBackground();
+        $schedule->command('blockchain:sync')->everyMinute()->runInBackground();
 
         // Clean the address book
-        //$schedule->command('address-book:clean')->everyMinute();
+        $schedule->command('address-book:clean')->everyMinute();
 
         // websocket statistics cleanup
-        //$schedule->command('websockets:clean')->daily();
+        $schedule->command('websockets:clean')->daily();
     }
 
     /**
