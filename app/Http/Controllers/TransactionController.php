@@ -83,7 +83,7 @@ class TransactionController extends Controller
     /**
      * Get Transaction payload
      *
-     * Returns the payload data of a transaction
+     * Returns the payload data of a transaction. Also scans for the sigchain element that received mining reward (if next block is already parsed)
      *
      * @urlParam tHash Hash of the Transaction Example: dc5a95f9739ee386f4179bb463846532608efb82db1e504b64ff3b718cc58572
      *
@@ -102,6 +102,13 @@ class TransactionController extends Controller
             $sigChain = Sigchain::where('payload_id', $payload->id)
                 ->with('sigchain_elems')
                 ->first();
+            $winner = Header::where('height',$payload->transaction->block_height + 1)->first();
+            if($winner){
+                $payload->winner = $winner->signerPk;
+            }
+            else {
+                $payload->winner = null;
+            }
             $payload->sigchain = $sigChain;
         }
         return response()->json($payload);
