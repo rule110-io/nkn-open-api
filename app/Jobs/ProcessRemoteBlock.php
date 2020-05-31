@@ -148,7 +148,7 @@ class ProcessRemoteBlock implements ShouldQueue
 
                             // WebSocket Events
                             if ($this->ws_enabled){
-                                $payload_obj->txHash = $transaction_obj->hash;
+                                $payload_obj->hash = $transaction_obj->hash;
                                 event(new CoinbaseTxEvent($payload_obj));
                             }
 
@@ -179,7 +179,7 @@ class ProcessRemoteBlock implements ShouldQueue
 
                             // WebSocket Events
                             if ($this->ws_enabled){
-                                $payload_obj->txHash = $transaction_obj->hash;
+                                $payload_obj->hash = $transaction_obj->hash;
                                 event(new TransferAssetTxEvent($payload_obj));
                             }
 
@@ -238,7 +238,7 @@ class ProcessRemoteBlock implements ShouldQueue
 
                                 // WebSocket Events
                                 if ($this->ws_enabled){
-                                    $payload_obj->txHash = $transaction_obj->hash;
+                                    $payload_obj->hash = $transaction_obj->hash;
                                     event(new SigChainTxEvent($payload_obj));
                                 }
                             } catch (\Exception $e) {
@@ -284,7 +284,7 @@ class ProcessRemoteBlock implements ShouldQueue
 
                             // WebSocket Events
                             if ($this->ws_enabled){
-                                $payload_obj->txHash = $transaction_obj->hash;
+                                $payload_obj->hash = $transaction_obj->hash;
                                 event(new RegisterNameTxEvent($payload_obj));
                             }
 
@@ -335,7 +335,7 @@ class ProcessRemoteBlock implements ShouldQueue
 
                             // WebSocket Events
                             if ($this->ws_enabled){
-                                $payload_obj->txHash = $transaction_obj->hash;
+                                $payload_obj->hash = $transaction_obj->hash;
                                 event(new TransferNameTxEvent($payload_obj));
                             }
 
@@ -375,7 +375,7 @@ class ProcessRemoteBlock implements ShouldQueue
 
                             // WebSocket events
                             if ($this->ws_enabled){
-                                $payload_obj->txHash = $transaction_obj->hash;
+                                $payload_obj->hash = $transaction_obj->hash;
                                 event(new DeleteNameTxEvent($payload_obj));
                             }
 
@@ -412,7 +412,7 @@ class ProcessRemoteBlock implements ShouldQueue
 
                             // WebSocket Events
                             if ($this->ws_enabled){
-                                $payload_obj->txHash = $transaction_obj->hash;
+                                $payload_obj->hash = $transaction_obj->hash;
                                 event(new SubscribeTxEvent($payload_obj));
                             }
 
@@ -446,7 +446,7 @@ class ProcessRemoteBlock implements ShouldQueue
 
                             // WebSocket Events
                             if ($this->ws_enabled){
-                                $payload_obj->txHash = $transaction_obj->hash;
+                                $payload_obj->hash = $transaction_obj->hash;
                                 event(new UnsubscribeTxEvent($payload_obj));
                             }
 
@@ -469,7 +469,7 @@ class ProcessRemoteBlock implements ShouldQueue
 
                             // WebSocket Events
                             if ($this->ws_enabled){
-                                $payload_obj->txHash = $transaction_obj->hash;
+                                $payload_obj->hash = $transaction_obj->hash;
                                 event(new GenerateIdTxEvent($payload_obj));
                             }
 
@@ -502,7 +502,7 @@ class ProcessRemoteBlock implements ShouldQueue
 
                             // WebSocket Events
                             if ($this->ws_enabled){
-                                $payload_obj->txHash = $transaction_obj->hash;
+                                $payload_obj->hash = $transaction_obj->hash;
                                 event(new NanoPayTxEvent($payload_obj));
                             }
 
@@ -528,7 +528,7 @@ class ProcessRemoteBlock implements ShouldQueue
 
                             // WebSocket Events
                             if ($this->ws_enabled){
-                                $payload_obj->txHash = $transaction_obj->hash;
+                                $payload_obj->hash = $transaction_obj->hash;
                                 event(new IssueAssetTxEvent($payload_obj));
                             }
 
