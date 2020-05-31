@@ -14,16 +14,16 @@ class IssueAssetTxEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets;
 
-    public $payload;
+    public $transaction;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($payload)
+    public function __construct($transaction)
     {
-        $this->payload = $payload;
+        $this->transaction = $transaction;
     }
 
     /**
