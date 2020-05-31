@@ -14,16 +14,16 @@ class TransferNameTxEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets;
 
-    public $payload;
+    public $transaction;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($payload)
+    public function __construct($transaction)
     {
-        $this->payload = $payload;
+        $this->transaction = $transaction;
     }
 
     /**
@@ -35,8 +35,8 @@ class TransferNameTxEvent implements ShouldBroadcast
     {
         return [
             'tx-updates',
-            'address.'.$this->payload->registrantWallet,
-            'address.'.$this->payload->recipientWallet
+            'address.'.$this->transaction->payload->registrantWallet,
+            'address.'.$this->transaction->payload->recipientWallet
         ];
     }
 
