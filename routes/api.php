@@ -21,8 +21,9 @@ Route::get('blocks/{block_id}/transactions', 'BlockController@showBlockTransacti
 //get all transactions
 Route::get('transactions', 'TransactionController@showAll');
 Route::get('transactions/{tHash}', 'TransactionController@show');
-//get transactions of specific block
-Route::get('transactions/{tHash}/payload', 'TransactionController@showTransactionPayload');
+
+//get all sigchains
+Route::get('sigchains', 'SigchainController@showAll');
 
 //get all addresses
 Route::get('addresses', 'AddressController@showAll');

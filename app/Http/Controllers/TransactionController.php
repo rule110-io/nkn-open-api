@@ -23,7 +23,7 @@ class TransactionController extends Controller
     /**
      * Get all transactions
      *
-     * Returns all transactions with corresponding block, payloads, outputs, inputs and attributes in simple pagination format starting with the latest one
+     * Returns all transactions with corresponding payload, programs in simple pagination format starting with the latest one
      *
      * @queryParam per_page Number of results per page Example:4
      * @queryParam txType Filter results by txType - single or comma separated. No-example
@@ -31,26 +31,24 @@ class TransactionController extends Controller
      */
     public function showAll(Request $request)
     {
-        // TODO: If txType Sigchain then also add sigchain_elems
         $txType = $request->get('txType');
         $txType = explode(',', $txType);
         $paginate = $request->get('per_page', 10);
         $page = $request->has('page') ? $request->query('page') : 1;
 
         if ($txType[0]) {
-            $transactions = Transaction::select('hash', 'block_height', 'txType', 'created_at')->whereIn("txType", $txType)
-                ->orderBy('created_at', 'desc')->simplePaginate($paginate);
+            $transactions = Transaction::whereIn("txType", $txType)
+                ->with(['payload','program','payload.sigchain','payload.sigchain.sigchain_elems'])
+                ->orderBy('block_id', 'desc')->simplePaginate($paginate);
         } else {
             $transactions = Cache::remember('last-' . $paginate . '-transactions-page-' . $page, config('nkn.update-interval'), function () use ($paginate) {
-                return Transaction::select('hash', 'block_height', 'txType', 'created_at')
-                    ->orderBy('created_at', 'desc')->simplePaginate($paginate);
+                return Transaction::with(['payload','programs','payload.sigchain','payload.sigchain.sigchain_elems'])
+                    ->orderBy('block_id', 'desc')->simplePaginate($paginate);
             });
         };
 
-
         $transactionCount = Transaction::select(DB::raw("max(id) as id"))->pluck('id');
         $blockCount = Block::select(DB::raw("max(id) as id"))->pluck('id');
-
 
         // Create a response and modify a header value
         $response = response()->json([
@@ -72,45 +70,10 @@ class TransactionController extends Controller
      */
     public function show($tHash)
     {
-        $transactions_query = Transaction::query()->where('hash', $tHash);
-        $transactions = $transactions_query
-            ->first();
-
-        return response()->json($transactions);
-    }
-
-
-    /**
-     * Get Transaction payload
-     *
-     * Returns the payload data of a transaction. Also scans for the sigchain element that received mining reward (if next block is already parsed)
-     *
-     * @urlParam tHash Hash of the Transaction Example: dc5a95f9739ee386f4179bb463846532608efb82db1e504b64ff3b718cc58572
-     *
-     */
-    public function showTransactionPayload($tHash)
-    {
-        $id = Cache::rememberForever('transaction-id-of-hash-' . $tHash, function () use ($tHash) {
-            return Transaction::where('hash', $tHash)
-                ->pluck('id')
-                ->first();
+        $transaction = Cache::rememberForever('transaction-hash-' . $tHash, function () use ($tHash) {
+            return Transaction::where('hash', $tHash)->with(['payload','programs','payload.sigchain','payload.sigchain.sigchain_elems'])->first();
         });
-
-        $payload = Payload::where('transaction_id', $id)
-            ->first();
-        if ($payload->payloadType == "SIG_CHAIN_TXN_TYPE") {
-            $sigChain = Sigchain::where('payload_id', $payload->id)
-                ->with('sigchain_elems')
-                ->first();
-            $winner = Header::where('height',$payload->transaction->block_height + 1)->first();
-            if($winner){
-                $payload->winner = $winner->signerPk;
-            }
-            else {
-                $payload->winner = null;
-            }
-            $payload->sigchain = $sigChain;
-        }
-        return response()->json($payload);
+        return response()->json($transaction);
     }
+
 }

@@ -218,9 +218,11 @@ class ProcessRemoteBlock implements ShouldQueue
                                 $sigchain_obj = new Sigchain(array_merge($sigchainData, ['created_at' => $created_at]));
                                 $payload_obj->sigchain()->save($sigchain_obj);
 
+                                $sigchain_elements = [];
+
                                 foreach ($protoSigchain->getElems() as $key => $value) {
 
-                                    $sigchain_obj->sigchain_elems()->save(new SigchainElem([
+                                    $sigchain_element = new SigchainElem([
                                         "id2" => bin2hex($value->getId()),
                                         "pubkey" => $pubkey,
                                         "wallet" => PubKey2Wallet::encode($pubkey),
@@ -231,7 +233,9 @@ class ProcessRemoteBlock implements ShouldQueue
                                         "vrf" => bin2hex($value->getVrf()),
                                         "proof" => bin2hex($value->getProof()),
                                         "created_at" => $created_at
-                                    ]));
+                                    ]);
+                                    $sigchain_obj->sigchain_elems()->save($sigchain_element);
+                                    array_push($sigchain_elements,$sigchain_element);
 
                                     $pubkey = bin2hex($value->getNextPubkey());
                                 }
@@ -239,6 +243,8 @@ class ProcessRemoteBlock implements ShouldQueue
                                 // WebSocket Events
                                 if ($this->ws_enabled){
                                     $transaction_obj->payload = $payload_obj;
+                                    $transaction_obj->payload->sigchain = $sigchain_obj;
+                                    $transaction_obj->payload->sigchain->sigchain_elems = $sigchain_elements;
                                     event(new SigChainTxEvent($transaction_obj));
                                 }
                             } catch (\Exception $e) {
