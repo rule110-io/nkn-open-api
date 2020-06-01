@@ -8,6 +8,12 @@ use App\Sigchain;
 
 use Cache;
 
+/**
+ * @group Sigchains
+ *
+ * Endpoints for sigchain-based queries
+ */
+
 class SigchainController extends Controller
 {
     /**

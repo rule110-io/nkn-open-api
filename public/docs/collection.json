@@ -2,7 +2,7 @@
     "variables": [],
     "info": {
         "name": "NKN Open API API",
-        "_postman_id": "6a69a302-5795-4b15-b66b-ad167efed844",
+        "_postman_id": "48f3f8f8-45bf-429b-99a1-e78e41fdeee5",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.0.0\/collection.json"
     },
@@ -391,6 +391,53 @@
             ]
         },
         {
+            "name": "Sigchains",
+            "description": "\nEndpoints for sigchain-based queries",
+            "item": [
+                {
+                    "name": "Get all sigchains",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "nkn-open-api.test",
+                            "path": "api\/v1\/sigchains",
+                            "query": [
+                                {
+                                    "key": "per_page",
+                                    "value": "4",
+                                    "description": "Number of results per page",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "The page you want to return",
+                                    "disabled": false
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns a paginated list of all sigchains with corresponding sigchain elements starting with the latest one.",
+                        "response": []
+                    }
+                }
+            ]
+        },
+        {
             "name": "Statistics",
             "description": "\nEndpoints for overall statistics queries",
             "item": [
@@ -521,7 +568,7 @@
                             "mode": "raw",
                             "raw": "[]"
                         },
-                        "description": "Returns all transactions with corresponding block, payloads, outputs, inputs and attributes in simple pagination format starting with the latest one",
+                        "description": "Returns all transactions with corresponding payload, programs in simple pagination format starting with the latest one",
                         "response": []
                     }
                 },
@@ -558,42 +605,6 @@
                             "raw": "[]"
                         },
                         "description": "Returns a specific block based on the height or block hash",
-                        "response": []
-                    }
-                },
-                {
-                    "name": "Get Transaction payload",
-                    "request": {
-                        "url": {
-                            "protocol": "https",
-                            "host": "nkn-open-api.test",
-                            "path": "api\/v1\/transactions\/:tHash\/payload",
-                            "query": [],
-                            "variable": [
-                                {
-                                    "id": "tHash",
-                                    "key": "tHash",
-                                    "value": "dc5a95f9739ee386f4179bb463846532608efb82db1e504b64ff3b718cc58572",
-                                    "description": "Hash of the Transaction"
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "[]"
-                        },
-                        "description": "Returns the payload data of a transaction",
                         "response": []
                     }
                 }
