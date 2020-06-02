@@ -153,7 +153,7 @@ class AddressController extends Controller
                     ->orWhere('recipientWallet', $address)
                     ->orWhere('registrantWallet', $address);
             })
-                ->with(['payload','program','payload.sigchain','payload.sigchain.sigchain_elems'])
+                ->with(['payload','programs','payload.sigchain','payload.sigchain.sigchain_elems'])
                 ->orderBy('block_id', 'desc')
                 ->simplePaginate($paginate);
         });
