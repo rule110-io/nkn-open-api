@@ -38,8 +38,8 @@ class AddressController extends Controller
         $page = $request->has('page') ? $request->query('page') : 1;
 
         $payloadsQuery = Payload::select(DB::raw("v.walletAddress as address, count(*) as count_transactions, min(created_at) as first_transaction, max(created_at) as last_transaction"))
-            ->crossJoin(DB::raw("lateral (values (\"senderWallet\"), (\"recipientWallet\")) v(walletAddress)"))
-            ->whereRaw('"payloadType" = \'COINBASE_TYPE\'')
+        ->crossJoin(DB::raw("lateral (values (\"senderWallet\"), (\"recipientWallet\")) v(walletAddress)"))
+        ->whereRaw('"payloadType" = \'COINBASE_TYPE\'')
             ->orWhereRaw('"payloadType" = \'TRANSFER_ASSET_TYPE\'')
             ->groupBy(DB::raw('v.walletAddress'));
 
@@ -62,9 +62,9 @@ class AddressController extends Controller
     }
 
     /**
-     * Get single address by height/hash
+     * Get single address by walletAddr
      *
-     * Returns a specific block based on the height or block hash
+     * Returns a specific address based on the wallet address
      *
      * @urlParam address required The wallet address. Example: NKNXXXXXGKct2cZuhSGW6xqiqeFVd5nJtAzg
      *
@@ -153,7 +153,8 @@ class AddressController extends Controller
                     ->orWhere('recipientWallet', $address)
                     ->orWhere('registrantWallet', $address);
             })
-                ->orderBy('created_at', 'desc')
+                ->with(['payload','program','payload.sigchain','payload.sigchain.sigchain_elems'])
+                ->orderBy('block_id', 'desc')
                 ->simplePaginate($paginate);
         });
 
