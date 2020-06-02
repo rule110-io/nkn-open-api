@@ -120,7 +120,8 @@ class BlockController extends Controller
 
         $transactions = Cache::rememberForever('last-' . $paginate . '-transactions-for-block-' . $block_id . '-page-' . $page, function () use ($paginate, $id) {
             return Transaction::where('block_id', $id)
-                ->orderBy('created_at', 'desc')
+                ->with(['payload','programs','payload.sigchain','payload.sigchain.sigchain_elems'])
+                ->orderBy('block_id', 'desc')
                 ->simplePaginate($paginate);
         });
 
