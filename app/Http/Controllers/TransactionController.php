@@ -38,7 +38,7 @@ class TransactionController extends Controller
 
         if ($txType[0]) {
             $transactions = Transaction::whereIn("txType", $txType)
-                ->with(['payload','program','payload.sigchain','payload.sigchain.sigchain_elems'])
+                ->with(['payload','programs','payload.sigchain','payload.sigchain.sigchain_elems'])
                 ->orderBy('block_id', 'desc')->simplePaginate($paginate);
         } else {
             $transactions = Cache::remember('last-' . $paginate . '-transactions-page-' . $page, config('nkn.update-interval'), function () use ($paginate) {
