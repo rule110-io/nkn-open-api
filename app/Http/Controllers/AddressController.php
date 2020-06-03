@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Payload;
 use App\Transaction;
 use App\AddressBookItem;
+use App\AddressStatistic;
 
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\Exception\RequestException;
@@ -37,25 +38,17 @@ class AddressController extends Controller
         $paginate = $request->get('per_page', 10);
         $page = $request->has('page') ? $request->query('page') : 1;
 
-        $payloadsQuery = Payload::select(DB::raw("v.walletAddress as address, count(*) as count_transactions, min(created_at) as first_transaction, max(created_at) as last_transaction"))
-        ->crossJoin(DB::raw("lateral (values (\"senderWallet\"), (\"recipientWallet\")) v(walletAddress)"))
-        ->whereRaw('"payloadType" = \'COINBASE_TYPE\'')
-            ->orWhereRaw('"payloadType" = \'TRANSFER_ASSET_TYPE\'')
-            ->groupBy(DB::raw('v.walletAddress'));
-
-
-        $results = Cache::remember('sumAddresses', config('nkn.update-interval'), function () use ($payloadsQuery) {
-            return DB::select(DB::raw("select count(*) from (" . $payloadsQuery->toSql() . ") as addresses"));
+        $addresses = Cache::remember('last-' . $paginate . '-addresses-page-' . $page, config('nkn.update-interval'), function () use ($paginate) {
+            return AddressStatistic::select('address', 'transaction_count as count_transactions', 'first_transaction', 'last_transaction')->orderBy('last_transaction', 'desc')->simplePaginate($paginate);
         });
-
-        $payload = Cache::remember('last-' . $paginate . '-addresses-page-' . $page, config('nkn.update-interval'), function () use ($paginate, $payloadsQuery) {
-            return $payloadsQuery->orderBy('last_transaction', 'desc')->simplePaginate($paginate);
+        $count = Cache::remember('sumAddresses', config('nkn.update-interval'), function (){
+            return DB::table('address_statistics')->count();
         });
 
         // Create a response and modify a header value
         $response = response()->json([
-            'addresses' => $payload,
-            'sumAddresses' => $results[0]->count
+            'addresses' => $addresses,
+            'sumAddresses' => $count
         ]);
 
         return $response;
@@ -72,11 +65,7 @@ class AddressController extends Controller
     public function show($address)
     {
         $payload = Cache::remember('address-' . $address, config('nkn.update-interval'), function () use ($address) {
-            return Payload::select(DB::raw("v.walletAddress as address, count(*) as count_transactions, min(created_at) as first_transaction, max(created_at) as last_transaction"))
-            ->crossJoin(DB::raw("lateral (values (\"senderWallet\"), (\"recipientWallet\"), (\"registrantWallet\")) v(walletAddress)"))
-            ->whereRaw('v.walletAddress = \'' . $address . '\'')
-            ->groupBy(DB::raw('v.walletAddress'))
-            ->first();
+            AddressStatistic::select('address', 'transaction_count as count_transactions', 'first_transaction', 'last_transaction')->where('address', $address)->first();
         });
 
         $addressBookItems = Cache::rememberForever('addressBookItem-addresses-' . $address, function () use ($address) {
