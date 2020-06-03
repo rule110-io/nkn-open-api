@@ -47,6 +47,12 @@ return [
             'level' => 'debug',
         ],
 
+        'syncWithBlockchain' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/SyncWithBlockchain.log'),
+            'level' => 'info',
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

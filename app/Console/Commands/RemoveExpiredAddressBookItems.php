@@ -7,6 +7,8 @@ use Illuminate\Console\Command;
 use App\AddressBookItem;
 use App\Jobs\DeleteAddressBookItem;
 
+use Carbon\Carbon;
+
 class RemoveExpiredAddressBookItems extends Command
 {
     /**
