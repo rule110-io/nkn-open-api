@@ -96,6 +96,7 @@ class ProcessRemoteBlock implements ShouldQueue
             $header_obj = new Header(array_merge($response["result"]["header"], ['created_at' => $created_at, 'wallet' => $wallet]));
 
             $block_obj->save();
+            $block_obj->header()->save($header_obj);
 
             foreach ($response["result"]["transactions"] as $transaction) {
 
@@ -132,12 +133,11 @@ class ProcessRemoteBlock implements ShouldQueue
                             ];
                             if ($header_obj->wallet !== $recipientWallet) {
                                 $header_obj->benificiaryWallet = $recipientWallet;
-                                $header_obj->save();
                             }
+                            $header_obj->reward = $amount;
+                            $header_obj->save();
                             $payload_obj = new Payload(array_merge($payloadData, ['created_at' => $created_at]));
                             $transaction_obj->payload()->save($payload_obj);
-
-                            $header_obj->reward = $amount;
 
                             // WebSocket Events
                             if ($this->ws_enabled){
@@ -536,8 +536,6 @@ class ProcessRemoteBlock implements ShouldQueue
                         break;
                 }
             }
-
-            $block_obj->header()->save($header_obj);
 
             $block_event = Block::where('id', $block_obj->id)
             ->with(['header:block_id,height,signerPk,wallet,benificiaryWallet,created_at'])
