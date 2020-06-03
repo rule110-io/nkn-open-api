@@ -535,16 +535,16 @@ class ProcessRemoteBlock implements ShouldQueue
                         }
                         break;
                 }
+            }
 
-                $block_obj->header()->save($header_obj);
+            $block_obj->header()->save($header_obj);
 
-                $block_event = Block::where('id', $block_obj->id)
-                ->with(['header:block_id,height,signerPk,wallet,benificiaryWallet,created_at'])
-                ->first();
-                $block_event->transactions_count = count($response["result"]["transactions"]);
-                if ($this->ws_enabled){
-                    event(new BlockEvent($block_event));
-                }
+            $block_event = Block::where('id', $block_obj->id)
+            ->with(['header:block_id,height,signerPk,wallet,benificiaryWallet,created_at'])
+            ->first();
+            $block_event->transactions_count = count($response["result"]["transactions"]);
+            if ($this->ws_enabled){
+                event(new BlockEvent($block_event));
             }
 
 
