@@ -7,7 +7,7 @@ use Carbon\Carbon;
 
 class Header extends Model
 {
-    protected $fillable = ['hash','version','prevBlockHash', 'transactionsRoot', 'stateRoot', 'timestamp', 'height', 'signature','randomBeacon', 'winnerHash', 'winnerType', 'signerPk', 'wallet','benificiaryWallet', 'signerId','created_at'];
+    protected $fillable = ['hash','version','prevBlockHash', 'transactionsRoot', 'stateRoot', 'timestamp', 'height', 'signature','randomBeacon', 'winnerHash', 'winnerType', 'signerPk', 'wallet', 'benificiaryWallet', 'signerId', 'reward', 'created_at'];
     protected $hidden = ['added_at','block_id'];
     public $timestamps = false;
 

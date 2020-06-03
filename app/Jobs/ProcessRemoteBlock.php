@@ -96,16 +96,6 @@ class ProcessRemoteBlock implements ShouldQueue
             $header_obj = new Header(array_merge($response["result"]["header"], ['created_at' => $created_at, 'wallet' => $wallet]));
 
             $block_obj->save();
-            $block_obj->header()->save($header_obj);
-
-            $block_event = Block::where('id', $block_obj->id)
-            ->with(['header:block_id,height,signerPk,wallet,benificiaryWallet,created_at'])
-            ->first();
-            $block_event->transactions_count = count($response["result"]["transactions"]);
-            if ($this->ws_enabled){
-                event(new BlockEvent($block_event));
-            }
-
 
             foreach ($response["result"]["transactions"] as $transaction) {
 
@@ -129,6 +119,7 @@ class ProcessRemoteBlock implements ShouldQueue
 
                             $senderWallet = PubKey2Wallet::programHashToAddress(bin2hex($protoCoinbase->getSender()));
                             $recipientWallet = PubKey2Wallet::programHashToAddress(bin2hex($protoCoinbase->getRecipient()));
+                            $amount = $protoCoinbase->getAmount();
 
                             $payloadData = [
                                 "payloadType" => $transaction["txType"],
@@ -136,7 +127,7 @@ class ProcessRemoteBlock implements ShouldQueue
                                 "sender" => bin2hex($protoCoinbase->getSender()),
                                 "recipient" => bin2hex($protoCoinbase->getRecipient()),
                                 "recipientWallet" => $recipientWallet,
-                                "amount" => $protoCoinbase->getAmount(),
+                                "amount" => $amount,
                                 "signerPk" => $response["result"]["header"]["signerPk"]
                             ];
                             if ($header_obj->wallet !== $recipientWallet) {
@@ -145,6 +136,8 @@ class ProcessRemoteBlock implements ShouldQueue
                             }
                             $payload_obj = new Payload(array_merge($payloadData, ['created_at' => $created_at]));
                             $transaction_obj->payload()->save($payload_obj);
+
+                            $header_obj->reward = $amount;
 
                             // WebSocket Events
                             if ($this->ws_enabled){
@@ -541,6 +534,16 @@ class ProcessRemoteBlock implements ShouldQueue
                             Log::channel('syncWithBlockchain')->error("Error processing payloadData: " . $transaction["payloadData"]);
                         }
                         break;
+                }
+
+                $block_obj->header()->save($header_obj);
+
+                $block_event = Block::where('id', $block_obj->id)
+                ->with(['header:block_id,height,signerPk,wallet,benificiaryWallet,created_at'])
+                ->first();
+                $block_event->transactions_count = count($response["result"]["transactions"]);
+                if ($this->ws_enabled){
+                    event(new BlockEvent($block_event));
                 }
             }
 
