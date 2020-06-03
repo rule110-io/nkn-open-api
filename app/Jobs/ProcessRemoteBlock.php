@@ -141,11 +141,6 @@ class ProcessRemoteBlock implements ShouldQueue
                             $transaction_obj->payload()->save($payload_obj);
 
                             //increment Address tx count
-                            $senderAddressStatistic = AddressStatistic::firstOrNew(['address' => $senderWallet],['transaction_count' => 0, 'first_transaction' => Carbon::createFromTimestamp($created_at)->toDateTimeString()]);
-                            $senderAddressStatistic->transaction_count = ($senderAddressStatistic->transaction_count + 1);
-                            $senderAddressStatistic->last_transaction = Carbon::createFromTimestamp($created_at)->toDateTimeString();
-                            $senderAddressStatistic->save();
-
                             $recipientAddressStatistic = AddressStatistic::firstOrNew(['address' => $recipientWallet],['transaction_count' => 0, 'first_transaction' => Carbon::createFromTimestamp($created_at)->toDateTimeString()]);
                             $recipientAddressStatistic->transaction_count = ($recipientAddressStatistic->transaction_count + 1);
                             $recipientAddressStatistic->last_transaction = Carbon::createFromTimestamp($created_at)->toDateTimeString();
