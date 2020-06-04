@@ -183,15 +183,6 @@ return [
                 'processes' => 1,
                 'tries' => 3,
                 'timeout' => 60 // Timeout after 60 seconds
-            ],
-            'supervisor-3' => [
-                'connection' => 'redis',
-                'queue' => ['initialBlockchainCrawler'],
-                'balance' => 'simple',
-                'memory' => 128,
-                'processes' => 50,
-                'tries' => 3,
-                'timeout' => 60 // Timeout after 60 seconds
             ]
         ],
 
