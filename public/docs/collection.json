@@ -2,7 +2,7 @@
     "variables": [],
     "info": {
         "name": "NKN Open API API",
-        "_postman_id": "48f3f8f8-45bf-429b-99a1-e78e41fdeee5",
+        "_postman_id": "9703edbb-f95f-416e-a69a-0cd80a79bc7c",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.0.0\/collection.json"
     },
@@ -16,7 +16,7 @@
                     "request": {
                         "url": {
                             "protocol": "https",
-                            "host": "nkn-open-api.test",
+                            "host": "openapi.nkn.org\/api\/v1",
                             "path": "api\/v1\/address-book",
                             "query": [
                                 {
@@ -57,7 +57,7 @@
                     "request": {
                         "url": {
                             "protocol": "https",
-                            "host": "nkn-open-api.test",
+                            "host": "openapi.nkn.org\/api\/v1",
                             "path": "api\/v1\/address-book\/address\/:walletAddress",
                             "query": [],
                             "variable": [
@@ -93,7 +93,7 @@
                     "request": {
                         "url": {
                             "protocol": "https",
-                            "host": "nkn-open-api.test",
+                            "host": "openapi.nkn.org\/api\/v1",
                             "path": "api\/v1\/address-book\/name\/:walletName",
                             "query": [],
                             "variable": [
@@ -135,7 +135,7 @@
                     "request": {
                         "url": {
                             "protocol": "https",
-                            "host": "nkn-open-api.test",
+                            "host": "openapi.nkn.org\/api\/v1",
                             "path": "api\/v1\/addresses",
                             "query": [
                                 {
@@ -172,11 +172,11 @@
                     }
                 },
                 {
-                    "name": "Get single address by height\/hash",
+                    "name": "Get single address by walletAddr",
                     "request": {
                         "url": {
                             "protocol": "https",
-                            "host": "nkn-open-api.test",
+                            "host": "openapi.nkn.org\/api\/v1",
                             "path": "api\/v1\/addresses\/:address",
                             "query": [],
                             "variable": [
@@ -203,7 +203,7 @@
                             "mode": "raw",
                             "raw": "[]"
                         },
-                        "description": "Returns a specific block based on the height or block hash",
+                        "description": "Returns a specific address based on the wallet address",
                         "response": []
                     }
                 },
@@ -212,7 +212,7 @@
                     "request": {
                         "url": {
                             "protocol": "https",
-                            "host": "nkn-open-api.test",
+                            "host": "openapi.nkn.org\/api\/v1",
                             "path": "api\/v1\/addresses\/:address\/transactions",
                             "query": [
                                 {
@@ -267,7 +267,7 @@
                     "request": {
                         "url": {
                             "protocol": "https",
-                            "host": "nkn-open-api.test",
+                            "host": "openapi.nkn.org\/api\/v1",
                             "path": "api\/v1\/blocks",
                             "query": [
                                 {
@@ -308,7 +308,7 @@
                     "request": {
                         "url": {
                             "protocol": "https",
-                            "host": "nkn-open-api.test",
+                            "host": "openapi.nkn.org\/api\/v1",
                             "path": "api\/v1\/blocks\/:block_id",
                             "query": [],
                             "variable": [
@@ -344,7 +344,7 @@
                     "request": {
                         "url": {
                             "protocol": "https",
-                            "host": "nkn-open-api.test",
+                            "host": "openapi.nkn.org\/api\/v1",
                             "path": "api\/v1\/blocks\/:block_id\/transactions",
                             "query": [
                                 {
@@ -399,7 +399,7 @@
                     "request": {
                         "url": {
                             "protocol": "https",
-                            "host": "nkn-open-api.test",
+                            "host": "openapi.nkn.org\/api\/v1",
                             "path": "api\/v1\/sigchains",
                             "query": [
                                 {
@@ -446,7 +446,7 @@
                     "request": {
                         "url": {
                             "protocol": "https",
-                            "host": "nkn-open-api.test",
+                            "host": "openapi.nkn.org\/api\/v1",
                             "path": "api\/v1\/statistics\/daily\/blocks",
                             "query": []
                         },
@@ -474,7 +474,7 @@
                     "request": {
                         "url": {
                             "protocol": "https",
-                            "host": "nkn-open-api.test",
+                            "host": "openapi.nkn.org\/api\/v1",
                             "path": "api\/v1\/statistics\/daily\/transactions",
                             "query": []
                         },
@@ -502,7 +502,7 @@
                     "request": {
                         "url": {
                             "protocol": "https",
-                            "host": "nkn-open-api.test",
+                            "host": "openapi.nkn.org\/api\/v1",
                             "path": "api\/v1\/statistics\/avgtxfee",
                             "query": []
                         },
@@ -524,6 +524,34 @@
                         "description": "Returns the average transaction fee of the latest 200 transactions.",
                         "response": []
                     }
+                },
+                {
+                    "name": "Number of Blocks\/Transactions",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "openapi.nkn.org\/api\/v1",
+                            "path": "api\/v1\/statistics\/counts",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Returns the number of blocks and transactions currently stored in the database",
+                        "response": []
+                    }
                 }
             ]
         },
@@ -536,7 +564,7 @@
                     "request": {
                         "url": {
                             "protocol": "https",
-                            "host": "nkn-open-api.test",
+                            "host": "openapi.nkn.org\/api\/v1",
                             "path": "api\/v1\/transactions",
                             "query": [
                                 {
@@ -577,7 +605,7 @@
                     "request": {
                         "url": {
                             "protocol": "https",
-                            "host": "nkn-open-api.test",
+                            "host": "openapi.nkn.org\/api\/v1",
                             "path": "api\/v1\/transactions\/:tHash",
                             "query": [],
                             "variable": [

@@ -9,6 +9,7 @@ use App\Node;
 use App\Wallet;
 use App\CrawledNode;
 use App\Transaction;
+use App\Header;
 
 use Cache;
 use DB;
@@ -102,6 +103,33 @@ class StatisticsController extends Controller
         });
 
         return response()->json($tx[0]->avgfee/100000000);
+    }
+
+    /**
+     * Number of Blocks/Transactions
+     *
+     * Returns the number of blocks and transactions currently stored in the database
+     *
+     */
+
+    public function countBlocksTransactions()
+    {
+        $rawQuery = "SELECT reltuples::BIGINT AS COUNT FROM pg_class WHERE relname='transactions';";
+        $txs = Cache::remember('count-tx-qry', config('nkn.update-interval'), function () use ($rawQuery) {
+            return DB::select(DB::raw($rawQuery));
+        });
+        $blocks  = Cache::remember('count-block-qry', config('nkn.update-interval'), function () {
+            return Header::select(DB::raw("MAX(height)"))
+                ->get();
+        });
+
+        // Create a response and modify a header value
+        $response = response()->json([
+            'blockCount' => $blocks[0]->max,
+            'txCount' => $txs[0]->count
+        ]);
+
+        return $response;
     }
 
 }
