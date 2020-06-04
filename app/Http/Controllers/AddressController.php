@@ -65,7 +65,7 @@ class AddressController extends Controller
     public function show($address)
     {
         $payload = Cache::remember('address-' . $address, config('nkn.update-interval'), function () use ($address) {
-            AddressStatistic::select('address', 'transaction_count as count_transactions', 'first_transaction', 'last_transaction')->where('address', $address)->first();
+            return AddressStatistic::select('address', 'transaction_count as count_transactions', 'first_transaction', 'last_transaction')->where('address', $address)->first();
         });
 
         $addressBookItems = Cache::rememberForever('addressBookItem-addresses-' . $address, function () use ($address) {
