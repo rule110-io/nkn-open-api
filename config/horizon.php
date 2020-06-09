@@ -183,6 +183,15 @@ return [
                 'processes' => 1,
                 'tries' => 3,
                 'timeout' => 60 // Timeout after 60 seconds
+            ],
+            'supervisor-3' => [
+                'connection' => 'redis',
+                'queue' => ['balanceSync'],
+                'balance' => 'simple',
+                'memory' => 128,
+                'processes' => 30,
+                'tries' => 3,
+                'timeout' => 60 // Timeout after 60 seconds
             ]
         ],
 
@@ -211,6 +220,15 @@ return [
                 'balance' => 'simple',
                 'memory' => 128,
                 'processes' => 50,
+                'tries' => 3,
+                'timeout' => 60 // Timeout after 60 seconds
+            ],
+            'supervisor-4' => [
+                'connection' => 'redis',
+                'queue' => ['balanceSync'],
+                'balance' => 'simple',
+                'memory' => 128,
+                'processes' => 1,
                 'tries' => 3,
                 'timeout' => 60 // Timeout after 60 seconds
             ]

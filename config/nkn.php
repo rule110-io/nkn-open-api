@@ -27,7 +27,7 @@ return [
     */
 
     'remote-node' => [
-        'address' => env('REMOTENODE_ADDR', 'http://mainnet-seed-0006.nkn.org'),
+        'address' => env('REMOTENODE_ADDR', 'https://mainnet-rpc-node-0001.nkn.org/mainnet/api/wallet'),
         'port' => env('REMOTENODE_PORT', 30003)
     ]
 ];

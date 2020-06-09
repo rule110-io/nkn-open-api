@@ -7,7 +7,7 @@ use Carbon\Carbon;
 
 class Payload extends Model
 {
-    protected $fillable = ['payloadType', 'sender', 'senderWallet', 'recipientWallet', 'recipient', 'amount', 'submitter', 'registrant', 'registrantWallet', 'name', 'subscriber', 'identifier', 'topic', 'bucket', 'duration', 'meta', 'public_key', 'registration_fee', 'nonce', 'txn_expiration', 'signerPk', 'symbol', 'total_supply', 'precision', 'nano_pay_expiration', 'created_at'];
+    protected $fillable = ['payloadType', 'sender', 'senderWallet', 'recipientWallet', 'recipient', 'amount', 'submitter', 'registrant', 'registrantWallet', 'name', 'subscriber', 'identifier', 'topic', 'bucket', 'duration', 'meta', 'public_key', 'generateWallet','subscriberWallet', 'registration_fee', 'nonce', 'txn_expiration', 'signerPk', 'symbol', 'total_supply', 'precision', 'nano_pay_expiration', 'created_at'];
     public $timestamps = false;
 
 

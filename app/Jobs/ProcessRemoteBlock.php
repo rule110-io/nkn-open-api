@@ -36,6 +36,8 @@ use App\Events\IssueAssetTxEvent;
 
 use App\Helpers\PubKey2Wallet;
 
+use App\Jobs\SyncAddressBalance;
+
 use Carbon\Carbon;
 
 use Log;
@@ -99,14 +101,22 @@ class ProcessRemoteBlock implements ShouldQueue
             $block_obj->save();
             $block_obj->header()->save($header_obj);
 
+            $addresses_involved = [];
+
             foreach ($response["result"]["transactions"] as $transaction) {
+
 
                 $transaction_obj = new Transaction(array_merge($transaction, ['created_at' => $created_at, 'block_height' => $response["result"]["header"]["height"]]));
                 $block_obj->transactions()->save($transaction_obj);
 
                 // directly parse all programs into the database
                 foreach ($transaction["programs"] as $program) {
-                    $transaction_obj->programs()->save(new Program(array_merge($program, ['created_at' => $created_at])));
+                    $program_obj = new Program(array_merge($program, ['created_at' => $created_at]));
+                    $transaction_obj->programs()->save($program_obj);
+
+                    //mark fee sender as address to update
+                    array_push($addresses_involved, PubKey2Wallet::encode(substr ( $program_obj->code , 2, 64)));
+
                 }
 
                 // Now we will deserialise the payload...
@@ -145,6 +155,8 @@ class ProcessRemoteBlock implements ShouldQueue
                             $recipientAddressStatistic->transaction_count = ($recipientAddressStatistic->transaction_count + 1);
                             $recipientAddressStatistic->last_transaction = Carbon::createFromTimestamp($created_at)->toDateTimeString();
                             $recipientAddressStatistic->save();
+
+                            array_push($addresses_involved, $recipientWallet);
 
                             // WebSocket Events
                             if ($this->ws_enabled){
@@ -187,6 +199,9 @@ class ProcessRemoteBlock implements ShouldQueue
                             $recipientAddressStatistic->transaction_count = ($recipientAddressStatistic->transaction_count + 1);
                             $recipientAddressStatistic->last_transaction = Carbon::createFromTimestamp($created_at)->toDateTimeString();
                             $recipientAddressStatistic->save();
+
+                            array_push($addresses_involved, $senderWallet);
+                            array_push($addresses_involved, $recipientWallet);
 
                             // WebSocket Events
                             if ($this->ws_enabled){
@@ -305,6 +320,8 @@ class ProcessRemoteBlock implements ShouldQueue
                             $registrantAddressStatistic->last_transaction = Carbon::createFromTimestamp($created_at)->toDateTimeString();
                             $registrantAddressStatistic->save();
 
+                            array_push($addresses_involved, $registrantWallet);
+
                             // WebSocket Events
                             if ($this->ws_enabled){
                                 $transaction_obj->payload = $payload_obj;
@@ -367,6 +384,9 @@ class ProcessRemoteBlock implements ShouldQueue
                             $recipientAddressStatistic->last_transaction = Carbon::createFromTimestamp($created_at)->toDateTimeString();
                             $recipientAddressStatistic->save();
 
+                            array_push($addresses_involved, $registrantWallet);
+                            array_push($addresses_involved, $recipientWallet);
+
                             // WebSocket Events
                             if ($this->ws_enabled){
                                 $transaction_obj->payload = $payload_obj;
@@ -413,6 +433,8 @@ class ProcessRemoteBlock implements ShouldQueue
                             $registrantAddressStatistic->last_transaction = Carbon::createFromTimestamp($created_at)->toDateTimeString();
                             $registrantAddressStatistic->save();
 
+                            array_push($addresses_involved, $registrantWallet);
+
                             // WebSocket events
                             if ($this->ws_enabled){
                                 $transaction_obj->payload = $payload_obj;
@@ -438,9 +460,14 @@ class ProcessRemoteBlock implements ShouldQueue
 
                         try {
                             $protoSubscribe->mergeFromString(hex2bin($transaction["payloadData"]));
+
+                            $subscriber = bin2hex($protoSubscribe->getSubscriber());
+                            $subscriberWallet = PubKey2Wallet::encode($subscriber);
+
                             $payloadData = [
                                 "payloadType" => $transaction["txType"],
-                                "subscriber" => bin2hex($protoSubscribe->getSubscriber()),
+                                "subscriber" => $subscriber,
+                                "subscriberWallet" => $subscriberWallet,
                                 "identifier" => $asciiIdentifier,
                                 "topic" => $asciiTopic,
                                 "bucket" => $protoSubscribe->getBucket(),
@@ -455,6 +482,15 @@ class ProcessRemoteBlock implements ShouldQueue
                                 $transaction_obj->payload = $payload_obj;
                                 event(new SubscribeTxEvent($transaction_obj));
                             }
+
+
+                            //increment Address tx count
+                            $subscriberAddressStatistic = AddressStatistic::firstOrNew(['address' => $subscriberWallet],['transaction_count' => 0, 'first_transaction' => Carbon::createFromTimestamp($created_at)->toDateTimeString()]);
+                            $subscriberAddressStatistic->transaction_count = ($subscriberAddressStatistic->transaction_count + 1);
+                            $subscriberAddressStatistic->last_transaction = Carbon::createFromTimestamp($created_at)->toDateTimeString();
+                            $subscriberAddressStatistic->save();
+
+                            array_push($addresses_involved, $subscriberWallet);
 
                         } catch (\Exception $e) {
                             Log::channel('syncWithBlockchain')->error("Error processing [SUBSCRIBE_TYPE] payloadData: " . $transaction["payloadData"] . ": " . $e);
@@ -475,9 +511,14 @@ class ProcessRemoteBlock implements ShouldQueue
 
                         try {
                             $protoUnsubscribe->mergeFromString(hex2bin($transaction["payloadData"]));
+
+                            $subscriber = bin2hex($protoSubscribe->getSubscriber());
+                            $subscriberWallet = PubKey2Wallet::encode($subscriber);
+
                             $payloadData = [
                                 "payloadType" => $transaction["txType"],
-                                "subscriber" => bin2hex($protoUnsubscribe->getSubscriber()),
+                                "subscriber" => $subscriber,
+                                "subscriberWallet" => $subscriberWallet,
                                 "identifier" => $asciiIdentifier,
                                 "topic" => $asciiTopic
                             ];
@@ -490,6 +531,15 @@ class ProcessRemoteBlock implements ShouldQueue
                                 event(new UnsubscribeTxEvent($transaction_obj));
                             }
 
+
+                            //increment Address tx count
+                            $subscriberAddressStatistic = AddressStatistic::firstOrNew(['address' => $subscriberWallet],['transaction_count' => 0, 'first_transaction' => Carbon::createFromTimestamp($created_at)->toDateTimeString()]);
+                            $subscriberAddressStatistic->transaction_count = ($subscriberAddressStatistic->transaction_count + 1);
+                            $subscriberAddressStatistic->last_transaction = Carbon::createFromTimestamp($created_at)->toDateTimeString();
+                            $subscriberAddressStatistic->save();
+
+                            array_push($addresses_involved, $subscriberWallet);
+
                         } catch (\Exception $e) {
                             Log::channel('syncWithBlockchain')->error("Error processing [UNSUBSCRIBE_TYPE] payloadData: " . $transaction["payloadData"] . ": " . $e);
                         }
@@ -499,10 +549,14 @@ class ProcessRemoteBlock implements ShouldQueue
                         $protoGenerateID = new \Protos\GenerateID;
                         try {
                             $protoGenerateID->mergeFromString(hex2bin($transaction["payloadData"]));
+                            $publicKey = bin2hex($protoGenerateID->getPublicKey());
+                            $generateWallet = PubKey2Wallet::encode($publicKey);
+
                             $payloadData = [
                                 "payloadType" => $transaction["txType"],
-                                "public_key" => bin2hex($protoGenerateID->getPublicKey()),
+                                "public_key" => $publicKey,
                                 "registration_fee" => $protoGenerateID->getRegistrationFee(),
+                                "generateWallet" => $generateWallet
                             ];
                             $payload_obj = new Payload(array_merge($payloadData, ['created_at' => $created_at]));
                             $transaction_obj->payload()->save($payload_obj);
@@ -511,6 +565,8 @@ class ProcessRemoteBlock implements ShouldQueue
                             if ($this->ws_enabled){
                                 event(new GenerateIdTxEvent($transaction_obj));
                             }
+
+                            array_push($addresses_involved, $generateWallet);
 
                         } catch (\Exception $e) {
                             Log::channel('syncWithBlockchain')->error("Error processing [GENERATE_ID_TYPE] payloadData: " . $transaction["payloadData"] . ": " . $e);
@@ -550,6 +606,9 @@ class ProcessRemoteBlock implements ShouldQueue
                             $recipientAddressStatistic->last_transaction = Carbon::createFromTimestamp($created_at)->toDateTimeString();
                             $recipientAddressStatistic->save();
 
+                            array_push($addresses_involved, $senderWallet);
+                            array_push($addresses_involved, $recipientWallet);
+
                             // WebSocket Events
                             if ($this->ws_enabled){
                                 $transaction_obj->payload = $payload_obj;
@@ -582,6 +641,8 @@ class ProcessRemoteBlock implements ShouldQueue
                             $senderAddressStatistic->last_transaction = Carbon::createFromTimestamp($created_at)->toDateTimeString();
                             $senderAddressStatistic->save();
 
+                            array_push($addresses_involved, $senderWallet);
+
                             // WebSocket Events
                             if ($this->ws_enabled){
                                 $transaction_obj->payload = $payload_obj;
@@ -595,11 +656,21 @@ class ProcessRemoteBlock implements ShouldQueue
                 }
             }
 
-            $block_event = Block::where('id', $block_obj->id)
-            ->with(['header:block_id,height,signerPk,wallet,benificiaryWallet,created_at'])
-            ->first();
-            $block_event->transactions_count = count($response["result"]["transactions"]);
+
+            $addressStatistics = AddressStatistic::whereIn('address', $addresses_involved)->get();
+
+            foreach ($addressStatistics as $addressStatistic) {
+                SyncAddressBalance::dispatch($addressStatistic)->onQueue('balanceSync');
+            }
+
+
             if ($this->ws_enabled){
+
+                $block_event = Block::where('id', $block_obj->id)
+                ->with(['header:block_id,height,signerPk,wallet,benificiaryWallet,created_at'])
+                ->first();
+                $block_event->transactions_count = count($response["result"]["transactions"]);
+
                 event(new BlockEvent($block_event));
             }
 

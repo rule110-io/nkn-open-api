@@ -79,6 +79,13 @@ return [
             'queue' => 'initialBlockchainCrawler',
             'retry_after' => 10, // Run for max 10 seconds
             'block_for' => null,
+        ],
+        'redis-balanceSync' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => 'balanceSync',
+            'retry_after' => 10, // Run for max 10 seconds
+            'block_for' => null,
         ]
     ],
 

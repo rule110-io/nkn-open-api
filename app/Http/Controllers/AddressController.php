@@ -39,7 +39,7 @@ class AddressController extends Controller
         $page = $request->has('page') ? $request->query('page') : 1;
 
         $addresses = Cache::remember('last-' . $paginate . '-addresses-page-' . $page, config('nkn.update-interval'), function () use ($paginate) {
-            return AddressStatistic::select('address', 'transaction_count as count_transactions', 'first_transaction', 'last_transaction')->orderBy('last_transaction', 'desc')->simplePaginate($paginate);
+            return AddressStatistic::select('address', 'transaction_count as count_transactions', 'first_transaction', 'last_transaction', 'balance')->orderBy('last_transaction', 'desc')->simplePaginate($paginate);
         });
         $count = Cache::remember('sumAddresses', config('nkn.update-interval'), function (){
             return DB::table('address_statistics')->count();
@@ -65,7 +65,7 @@ class AddressController extends Controller
     public function show($address)
     {
         $payload = Cache::remember('address-' . $address, config('nkn.update-interval'), function () use ($address) {
-            return AddressStatistic::select('address', 'transaction_count as count_transactions', 'first_transaction', 'last_transaction')->where('address', $address)->first();
+            return AddressStatistic::select('address', 'transaction_count as count_transactions', 'first_transaction', 'last_transaction','balance')->where('address', $address)->first();
         });
 
         $addressBookItems = Cache::rememberForever('addressBookItem-addresses-' . $address, function () use ($address) {
@@ -75,38 +75,7 @@ class AddressController extends Controller
 
 
         if ($payload) {
-
-            if ($addressBookItems){
-                $payload["name"] = $addressBookItems->pluck("name");
-            }
-            else{
-                $payload["name"] = "";
-            }
-            $requestContent = [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json'
-                ],
-                'json' => [
-                    "id" => 1,
-                    "method" => "getbalancebyaddr",
-                    "params" => [
-                        "address" => $address,
-                    ],
-                    "jsonrpc" => "2.0"
-                ]
-            ];
-
-            try {
-                $client = new GuzzleHttpClient();
-
-                $apiRequest = $client->Post('http://mainnet-seed-0006.nkn.org:30003', $requestContent);
-                $response = json_decode($apiRequest->getBody(), true, 512, JSON_BIGINT_AS_STRING);
-                if(isset($response["result"]["amount"])){
-                    $payload->balance = $response["result"]["amount"];
-                }
-
-            } catch (RequestException $re) { }
+            return response()->json($payload);
         } else {
             return response()->json([
                 'address' => $address,
@@ -117,7 +86,6 @@ class AddressController extends Controller
                 'balance' => 0
             ]);
         }
-        return response()->json($payload);
     }
 
     /**
@@ -140,7 +108,9 @@ class AddressController extends Controller
             return Transaction::whereHas('payload', function ($query) use ($address) {
                 $query->where('senderWallet', $address)
                     ->orWhere('recipientWallet', $address)
-                    ->orWhere('registrantWallet', $address);
+                    ->orWhere('registrantWallet', $address)
+                    ->orWhere('generateWallet', $address)
+                    ->orWhere('subscriberWallet', $address);
             })
                 ->with(['payload','programs','payload.sigchain','payload.sigchain.sigchain_elems'])
                 ->orderBy('block_id', 'desc')
