@@ -656,13 +656,12 @@ class ProcessRemoteBlock implements ShouldQueue
                 }
             }
 
-
-            $addressStatistics = AddressStatistic::whereIn('address', $addresses_involved)->get();
-
-            foreach ($addressStatistics as $addressStatistic) {
-                SyncAddressBalance::dispatch($addressStatistic)->onQueue('balanceSync');
+            if ($this->ws_enabled){
+                $addressStatistics = AddressStatistic::whereIn('address', $addresses_involved)->get();
+                foreach ($addressStatistics as $addressStatistic) {
+                    SyncAddressBalance::dispatch($addressStatistic)->onQueue('balanceSync');
+                }
             }
-
 
             if ($this->ws_enabled){
 
