@@ -40,7 +40,7 @@ class SyncBalances extends Command
      */
     public function handle()
     {
-        AddressStatistic::where()->chunk(1000, function ($addressStatistics) {
+        AddressStatistic::whereNull('balance')->chunk(1000, function ($addressStatistics) {
             foreach ($addressStatistics as $addressStatistic) {
                 SyncAddressBalance::dispatch($addressStatistic)->onQueue('balanceSync');
             }
