@@ -32,6 +32,9 @@ class Kernel extends ConsoleKernel
         // Clean the address book
         $schedule->command('address-book:clean')->everyMinute();
 
+        // Get balance of not-yet-parsed addresses
+        // $schedule->command('balances:sync --limit 2000')->everyFiveMinutes();
+
         // websocket statistics cleanup
         $schedule->command('websockets:clean')->daily();
     }

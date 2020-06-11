@@ -19,7 +19,7 @@ You can also host NKN open API by yourself!
 
 ## I don't want to host it by myself - how can I get started fast?
 
-If you want to jump right into app developing it's a good idea to check out our documentation. All api endpoints are already documented here.
+If you want to jump right into app developing it's a good idea to check out our documentation. All api endpoints are already documented [here](https://openapi.nkn.org/docs/).
 
 Missing a feature? Just create an Issue for that and we'll implement it!
 
@@ -28,7 +28,10 @@ Missing a feature? Just create an Issue for that and we'll implement it!
 If you want to host your own NKN API by yourself you at least need
 
 - [Composer](https://getcomposer.org/) installed
-- A configured web server ([Nginx](https://www.howtoforge.com/tutorial/ubuntu-laravel-php-nginx/) or [Apache](https://www.howtoforge.com/tutorial/install-laravel-on-ubuntu-for-apache/))
+- A configured web server ([Nginx](https://www.howtoforge.com/tutorial/ubuntu-laravel-php-nginx/) or [Apache](https://www.howtoforge.com/tutorial/install-laravel-on-ubuntu-for-apache/)) with minimal:
+-- 2 CPU cores
+-- 4 Gigabytes of RAM
+-- 50 Gigabytes of Storage 
 - At least PHP 7.2.5
 -- redis extension
 - [PostgreSQL](https://www.postgresql.org/) database server
@@ -102,8 +105,20 @@ You can also just rename ``.env.example`` to get the configurations of the publi
 #### 6. Run the first blockchain sync (takes a looooong time)
 ```php artisan blockchain:init```
 
-#### 7. Setup a regular cronjob for job parsing
-Setup an "every minute" job that runs ```php artisan schedule:run``` to get regular updates in time.
+Note: 
+If you got a minimal specs server redis will run out of memory after more than 400k jobs. To avoid this we recommend to cancel out the job if your queue reaches >300k blocks. Let all jobs run and then rerun the command for the next 300k blocks.
+
+You can check your redis queue by pointing your browser at ``http://YOUR_IP/horizon``.
+
+#### 7. Get balances for every crawled address
+You got two options for this:
+
+1. run ```php artisan balances:sync``` once to push all address-updates to the queue. Again: this is only doable with a performant server.
+2. Head over to ``app/Console/Kernel.php`` uncomment the following line to update 2000 Addresses every 5 minutes: 
+ ```        // $schedule->command('balances:sync --limit 2000')->everyFiveMinutes();```
+
+#### 8. Setup a regular cronjob for job parsing and set your environment to production
+Setup an "every minute" job that runs ```php artisan schedule:run``` to get regular updates in time. Also don't forget to set ``APP_ENV=production`` in your ``.env``file.
 
 
 
