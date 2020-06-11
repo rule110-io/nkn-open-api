@@ -52,7 +52,7 @@ class SyncBalances extends Command
             });
         }
         else{
-            $maxId = AddressStatistic::orderBy('id', 'asc')->offset($limit)->limit(1)->select('id')->first()->id;
+            $maxId = AddressStatistic::whereNull('balance')->orderBy('id', 'asc')->offset($limit)->limit(1)->select('id')->first()->id;
             AddressStatistic::whereNull('balance')->where('id', '<', $maxId)->chunkById(1000, function ($addressStatistics) {
                 foreach ($addressStatistics as $addressStatistic) {
                     SyncAddressBalance::dispatch($addressStatistic)->onQueue('balanceSync');
