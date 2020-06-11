@@ -14,7 +14,7 @@ class SyncBalances extends Command
      *
      * @var string
      */
-    protected $signature = 'balances:sync';
+    protected $signature = 'balances:sync {--limit=0}';
 
     /**
      * The console command description.
@@ -40,10 +40,25 @@ class SyncBalances extends Command
      */
     public function handle()
     {
-        AddressStatistic::whereNull('balance')->chunk(1000, function ($addressStatistics) {
-            foreach ($addressStatistics as $addressStatistic) {
-                SyncAddressBalance::dispatch($addressStatistic)->onQueue('balanceSync');
-            }
-        });
+        $limit = $this->option('limit');
+
+        //dd($limit);
+
+        if ($limit == 0){
+            AddressStatistic::whereNull('balance')->chunk(1000, function ($addressStatistics) {
+                foreach ($addressStatistics as $addressStatistic) {
+                    SyncAddressBalance::dispatch($addressStatistic)->onQueue('balanceSync');
+                }
+            });
+        }
+        else{
+            $maxId = AddressStatistic::orderBy('id', 'asc')->offset($limit)->limit(1)->select('id')->first()->id;
+            AddressStatistic::whereNull('balance')->where('id', '<', $maxId)->chunkById(1000, function ($addressStatistics) {
+                foreach ($addressStatistics as $addressStatistic) {
+                    SyncAddressBalance::dispatch($addressStatistic)->onQueue('balanceSync');
+                }
+            });
+        }
+
     }
 }
