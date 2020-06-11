@@ -54,7 +54,7 @@ class SyncAddressBalance implements ShouldQueue
             $apiRequest = $client->Post(config('nkn.remote-node.address') . ':' . config('nkn.remote-node.port'), $requestContent);
             $response = json_decode($apiRequest->getBody(), true, 512, JSON_BIGINT_AS_STRING);
             if(isset($response["result"]["amount"])){
-                $this->addressStatistic->balance = floatval($response["result"]["amount"]) * 100000000;
+                $this->addressStatistic->balance = intval(floatval($response["result"]["amount"]) * 100000000);
                 $this->addressStatistic->save();
             }
 
