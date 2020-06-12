@@ -2,7 +2,7 @@
     "variables": [],
     "info": {
         "name": "NKN Open API API",
-        "_postman_id": "9703edbb-f95f-416e-a69a-0cd80a79bc7c",
+        "_postman_id": "3a56a7f7-ef2d-480e-b9b8-48d44f7b1e9a",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.0.0\/collection.json"
     },
@@ -550,6 +550,34 @@
                             "raw": "[]"
                         },
                         "description": "Returns the number of blocks and transactions currently stored in the database",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Supplies",
+                    "request": {
+                        "url": {
+                            "protocol": "https",
+                            "host": "openapi.nkn.org\/api\/v1",
+                            "path": "api\/v1\/statistics\/supply",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "Calculates the current supply data of NKN tokens",
                         "response": []
                     }
                 }
