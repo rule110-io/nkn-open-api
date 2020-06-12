@@ -37,6 +37,7 @@ Route::get('statistics/daily/transactions', 'StatisticsController@dailyTransacti
 
 Route::get('statistics/avgtxfee', 'StatisticsController@avgTxFee');
 Route::get('statistics/counts', 'StatisticsController@countBlocksTransactions');
+Route::get('statistics/supply', 'StatisticsController@getSupply');
 
 Route::get('address-book', 'AddressBookItemController@showWalletNames');
 Route::get('address-book/address/{walletAddress}', 'AddressBookItemController@getNameByAddress');
