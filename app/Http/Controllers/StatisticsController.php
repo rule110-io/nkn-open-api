@@ -142,11 +142,13 @@ class StatisticsController extends Controller
 
     public function getSupply()
     {
-        $result = AddressStatistic::select(
-            DB::raw('sum(balance)::BIGINT as total_supply'),
-            DB::raw('sum(balance) FILTER (WHERE address != \'NKNFCrUMFPkSeDRMG2ME21hD6wBCA2poc347\')::BIGINT as circulating_supply')
-        )
-            ->get();
+        $result = Cache::remember('supply_data', config('nkn.update-interval'), function () {
+            return AddressStatistic::select(
+                DB::raw('sum(balance)::BIGINT as total_supply'),
+                DB::raw('sum(balance) FILTER (WHERE address != \'NKNFCrUMFPkSeDRMG2ME21hD6wBCA2poc347\')::BIGINT as circulating_supply')
+            )
+                ->get();
+        });
 
         // Create a response and modify a header value
         $response = response()->json([
