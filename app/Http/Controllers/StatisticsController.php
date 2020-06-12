@@ -10,6 +10,7 @@ use App\Wallet;
 use App\CrawledNode;
 use App\Transaction;
 use App\Header;
+use App\AddressStatistic;
 
 use Cache;
 use DB;
@@ -127,6 +128,33 @@ class StatisticsController extends Controller
         $response = response()->json([
             'blockCount' => $blocks[0]->max,
             'txCount' => $txs[0]->count
+        ]);
+
+        return $response;
+    }
+
+    /**
+     * Supplies
+     *
+     * Calculates the current supply data of NKN tokens
+     *
+     */
+
+    public function getSupply()
+    {
+        $result = Cache::remember('supply_data', config('nkn.update-interval'), function () {
+            return AddressStatistic::select(
+                DB::raw('sum(balance)::BIGINT as total_supply'),
+                DB::raw('sum(balance) FILTER (WHERE address != \'NKNFCrUMFPkSeDRMG2ME21hD6wBCA2poc347\')::BIGINT as circulating_supply')
+            )
+                ->get();
+        });
+
+        // Create a response and modify a header value
+        $response = response()->json([
+            'max_supply' => 100000000000000000,
+            'total_supply' => $result[0]->total_supply,
+            'circulating_supply' => $result[0]->circulating_supply
         ]);
 
         return $response;
