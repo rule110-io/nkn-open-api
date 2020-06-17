@@ -4,13 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Payload;
 use App\Transaction;
 use App\AddressBookItem;
 use App\AddressStatistic;
-
-use GuzzleHttp\Client as GuzzleHttpClient;
-use GuzzleHttp\Exception\RequestException;
 
 use Cache;
 
@@ -75,6 +71,12 @@ class AddressController extends Controller
 
 
         if ($payload) {
+            if ($addressBookItems){
+                $payload["name"] = $addressBookItems->pluck("name");
+            }
+            else{
+                $payload["name"] = "";
+            }
             return response()->json($payload);
         } else {
             return response()->json([
