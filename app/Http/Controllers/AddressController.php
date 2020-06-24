@@ -102,22 +102,39 @@ class AddressController extends Controller
      */
     public function showAddressTransactions($address, Request $request)
     {
-        // TODO: Filter by txType
         $page = $request->has('page') ? $request->query('page') : 1;
         $paginate = $request->get('per_page', 10);
+        $txType = $request->get('txType');
+        $txType = explode(',', $txType);
 
-        $transactions = Cache::remember('last-' . $paginate . '-transactions-for-address-'.$address.'-page-' . $page, config('nkn.update-interval'), function () use ($paginate, $address) {
-            return Transaction::whereHas('payload', function ($query) use ($address) {
-                $query->where('senderWallet', $address)
-                    ->orWhere('recipientWallet', $address)
-                    ->orWhere('registrantWallet', $address)
-                    ->orWhere('generateWallet', $address)
-                    ->orWhere('subscriberWallet', $address);
-            })
-                ->with(['payload','programs','payload.sigchain','payload.sigchain.sigchain_elems'])
-                ->orderBy('block_id', 'desc')
-                ->simplePaginate($paginate);
-        });
+        if ($txType[0]) {
+            $transactions = Transaction::whereIn("txType", $txType)
+                    ->whereHas('payload', function ($query) use ($address) {
+                        $query->where('senderWallet', $address)
+                            ->orWhere('recipientWallet', $address)
+                            ->orWhere('registrantWallet', $address)
+                            ->orWhere('generateWallet', $address)
+                            ->orWhere('subscriberWallet', $address);
+                    })
+                    ->with(['payload','programs','payload.sigchain','payload.sigchain.sigchain_elems'])
+                    ->orderBy('block_id', 'desc')
+                    ->simplePaginate($paginate);
+        } else {
+            $transactions = Cache::remember('last-' . $paginate . '-transactions-for-address-'.$address.'-page-' . $page, config('nkn.update-interval'), function () use ($paginate, $address) {
+                return Transaction::whereHas('payload', function ($query) use ($address) {
+                    $query->where('senderWallet', $address)
+                        ->orWhere('recipientWallet', $address)
+                        ->orWhere('registrantWallet', $address)
+                        ->orWhere('generateWallet', $address)
+                        ->orWhere('subscriberWallet', $address);
+                })
+                    ->with(['payload','programs','payload.sigchain','payload.sigchain.sigchain_elems'])
+                    ->orderBy('block_id', 'desc')
+                    ->simplePaginate($paginate);
+            });
+        };
+
+
 
         return response()->json($transactions);
     }
