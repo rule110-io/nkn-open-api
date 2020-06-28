@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Transaction;
+use App\Header;
 use App\AddressBookItem;
 use App\AddressStatistic;
 
@@ -137,5 +138,26 @@ class AddressController extends Controller
 
 
         return response()->json($transactions);
+    }
+
+    /**
+     * Mined to Address Check
+     *
+     * Checks if an address has already mined to a beneficiaryWallet
+     *
+     * @urlParam address required The wallet address. Example: NKNXXXXXGKct2cZuhSGW6xqiqeFVd5nJtAzg
+     * @urlParam beneficiaryAddress required The wallet address. Example: NKNXXXXXGKct2cZuhSGW6xqiqeFVd5nJtAzg
+     *
+     */
+
+    public function hasMinedToDonationAddress($address,$beneficiaryAddress)
+    {
+        $donation = Header::where('wallet', $address)->where('benificiaryWallet', $beneficiaryAddress)->first();
+
+        if ($donation) {
+            return response(null, 202);
+        } else {
+            return response(null, 200);
+        }
     }
 }
