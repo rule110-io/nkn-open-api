@@ -30,7 +30,7 @@ class PkController extends Controller
     {
         $date = $request->get('date', date("Y-m-d"));
 
-        $data = Cache::remember('signed-blocks-' . $pk, config('nkn.update-interval'), function () use ($pk,$date) {
+        $data = Cache::remember('signed-blocks-' . $pk . '-date-' . $date, config('nkn.update-interval'), function () use ($pk,$date) {
             return Header::select(DB::raw("count(*)"))->where('signerPk',$pk)
             ->whereRaw('"created_at" > \''. $date .'\'::date')
             ->whereRaw('"created_at" < \''. $date .'\'::date +1')
