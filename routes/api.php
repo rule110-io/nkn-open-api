@@ -33,6 +33,8 @@ Route::get('addresses/{address}', 'AddressController@show');
 Route::get('addresses/{address}/transactions', 'AddressController@showAddressTransactions');
 Route::get('addresses/{address}/hasMinedToAddress/{beneficiaryAddress}', 'AddressController@hasMinedToDonationAddress');
 
+Route::get('pks/{pk}/blocksSigned', 'PkController@countBlocks');
+
 
 Route::get('statistics/daily/blocks', 'StatisticsController@dailyBlocks');
 Route::get('statistics/daily/transactions', 'StatisticsController@dailyTransactions');
