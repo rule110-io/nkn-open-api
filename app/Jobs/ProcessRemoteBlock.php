@@ -450,11 +450,16 @@ class ProcessRemoteBlock implements ShouldQueue
                     case "SUBSCRIBE_TYPE":
                         $protoSubscribe = new \Protos\Subscribe;
 
-                        $identifier = bin2hex($protoSubscribe->getIdentifier());
-                        $topic = bin2hex($protoSubscribe->getTopic());
-
                         try {
                             $protoSubscribe->mergeFromString(hex2bin($transaction["payloadData"]));
+
+                            $identifier = bin2hex($protoSubscribe->getIdentifier());
+                            $asciiIdentifier = '';
+                            for ($i = 0; $i < strlen($identifier); $i += 2) $asciiIdentifier .= chr(hexdec(substr($identifier, $i, 2)));
+
+                            $topic = bin2hex($protoSubscribe->getTopic());
+                            $asciiTopic = '';
+                            for ($i = 0; $i < strlen($topic); $i += 2) $asciiTopic .= chr(hexdec(substr($topic, $i, 2)));
 
                             $subscriber = bin2hex($protoSubscribe->getSubscriber());
                             $subscriberWallet = PubKey2Wallet::encode($subscriber);
@@ -463,8 +468,8 @@ class ProcessRemoteBlock implements ShouldQueue
                                 "payloadType" => $transaction["txType"],
                                 "subscriber" => $subscriber,
                                 "subscriberWallet" => $subscriberWallet,
-                                "identifier" => $identifier,
-                                "topic" => $topic,
+                                "identifier" => $asciiIdentifier,
+                                "topic" => $asciiTopic,
                                 "bucket" => $protoSubscribe->getBucket(),
                                 "duration" => $protoSubscribe->getDuration(),
                                 "meta" => bin2hex($protoSubscribe->getMeta()),
@@ -496,12 +501,16 @@ class ProcessRemoteBlock implements ShouldQueue
                     case "UNSUBSCRIBE_TYPE":
                         $protoUnsubscribe = new \Protos\Unsubscribe;
 
-                        $identifier = bin2hex($protoUnsubscribe->getIdentifier());
-                        $topic = bin2hex($protoUnsubscribe->getTopic());
-
-
                         try {
                             $protoUnsubscribe->mergeFromString(hex2bin($transaction["payloadData"]));
+
+                            $identifier = bin2hex($protoUnsubscribe->getIdentifier());
+                            $asciiIdentifier = '';
+                            for ($i = 0; $i < strlen($identifier); $i += 2) $asciiIdentifier .= chr(hexdec(substr($identifier, $i, 2)));
+
+                            $topic = bin2hex($protoUnsubscribe->getTopic());
+                            $asciiTopic = '';
+                            for ($i = 0; $i < strlen($topic); $i += 2) $asciiTopic .= chr(hexdec(substr($topic, $i, 2)));
 
                             $subscriber = bin2hex($protoSubscribe->getSubscriber());
                             $subscriberWallet = PubKey2Wallet::encode($subscriber);
@@ -510,8 +519,8 @@ class ProcessRemoteBlock implements ShouldQueue
                                 "payloadType" => $transaction["txType"],
                                 "subscriber" => $subscriber,
                                 "subscriberWallet" => $subscriberWallet,
-                                "identifier" => $identifier,
-                                "topic" => $topic
+                                "identifier" => $asciiIdentifier,
+                                "topic" => $asciiTopic
                             ];
                             $payload_obj = new Payload(array_merge($payloadData, ['created_at' => $created_at]));
                             $transaction_obj->payload()->save($payload_obj);
