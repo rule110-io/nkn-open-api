@@ -150,7 +150,7 @@ class AddressController extends Controller
      *
      */
 
-    public function hasMinedToDonationAddress($address,$beneficiaryAddress)
+    public function hasMinedToAddress($address,$beneficiaryAddress)
     {
         $donation = Header::where('wallet', $address)->where('benificiaryWallet', $beneficiaryAddress)->first();
 
