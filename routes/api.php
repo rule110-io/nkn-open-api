@@ -31,7 +31,7 @@ Route::get('addresses', 'AddressController@showAll');
 Route::get('addresses/{address}', 'AddressController@show');
 //get transactions of specific address
 Route::get('addresses/{address}/transactions', 'AddressController@showAddressTransactions');
-Route::get('addresses/{address}/hasMinedToAddress/{beneficiaryAddress}', 'AddressController@hasMinedToDonationAddress');
+Route::get('addresses/{address}/hasMinedToAddress/{beneficiaryAddress}', 'AddressController@hasMinedToAddress');
 
 Route::get('pks/{pk}/blocksSigned', 'PkController@countBlocks');
 
