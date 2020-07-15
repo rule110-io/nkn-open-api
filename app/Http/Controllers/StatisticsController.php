@@ -115,7 +115,7 @@ class StatisticsController extends Controller
 
     public function countBlocksTransactions()
     {
-        $rawQuery = "SELECT reltuples::BIGINT AS COUNT FROM pg_class WHERE relname='transactions';";
+        $rawQuery = "SELECT reltuples AS COUNT FROM row_counts WHERE relname='transactions';";
         $txs = Cache::remember('count-tx-qry', config('nkn.update-interval'), function () use ($rawQuery) {
             return DB::select(DB::raw($rawQuery));
         });
@@ -123,15 +123,16 @@ class StatisticsController extends Controller
             return Header::select(DB::raw("MAX(height)"))
                 ->get();
         });
-        $count = Cache::remember('sumAddresses', config('nkn.update-interval'), function (){
-            return DB::table('address_statistics')->count();
+        $rawQuery = "SELECT reltuples AS COUNT FROM row_counts WHERE relname='address_statistics';";
+        $txs2 = Cache::remember('sumAddresses', config('nkn.update-interval'), function () use ($rawQuery) {
+            return DB::select(DB::raw($rawQuery));
         });
 
         // Create a response and modify a header value
         $response = response()->json([
             'blockCount' => $blocks[0]->max,
             'txCount' => $txs[0]->count,
-            'addressCount' => $count
+            'addressCount' => $txs2[0]->count,
         ]);
 
         return $response;
