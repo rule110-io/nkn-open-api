@@ -157,9 +157,9 @@ class StatisticsController extends Controller
 
         // Create a response and modify a header value
         $response = response()->json([
-            'max_supply' => 100000000000000000,
-            'total_supply' => $result[0]->total_supply,
-            'circulating_supply' => $result[0]->circulating_supply
+            'max_supply' => 100000000000000000/100000000,
+            'total_supply' => $result[0]->total_supply/100000000,
+            'circulating_supply' => $result[0]->circulating_supply/100000000
         ]);
 
         return $response;
