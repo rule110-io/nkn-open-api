@@ -21,6 +21,14 @@ class GenerateID extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>int64 registration_fee = 2;</code>
      */
     protected $registration_fee = 0;
+    /**
+     * Generated from protobuf field <code>bytes sender = 3;</code>
+     */
+    protected $sender = '';
+    /**
+     * Generated from protobuf field <code>int32 version = 4;</code>
+     */
+    protected $version = 0;
 
     /**
      * Constructor.
@@ -30,6 +38,8 @@ class GenerateID extends \Google\Protobuf\Internal\Message
      *
      *     @type string $public_key
      *     @type int|string $registration_fee
+     *     @type string $sender
+     *     @type int $version
      * }
      */
     public function __construct($data = NULL) {
@@ -77,6 +87,50 @@ class GenerateID extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkInt64($var);
         $this->registration_fee = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>bytes sender = 3;</code>
+     * @return string
+     */
+    public function getSender()
+    {
+        return $this->sender;
+    }
+
+    /**
+     * Generated from protobuf field <code>bytes sender = 3;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setSender($var)
+    {
+        GPBUtil::checkString($var, False);
+        $this->sender = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 version = 4;</code>
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Generated from protobuf field <code>int32 version = 4;</code>
+     * @param int $var
+     * @return $this
+     */
+    public function setVersion($var)
+    {
+        GPBUtil::checkInt32($var);
+        $this->version = $var;
 
         return $this;
     }
