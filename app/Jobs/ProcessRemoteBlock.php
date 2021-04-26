@@ -542,10 +542,15 @@ class ProcessRemoteBlock implements ShouldQueue
                             $publicKey = bin2hex($protoGenerateID->getPublicKey());
                             $generateWallet = PubKey2Wallet::encode($publicKey);
 
+                            $senderWallet = PubKey2Wallet::programHashToAddress(bin2hex($protoGenerateID->getSender()));
+
                             $payloadData = [
                                 "payloadType" => $transaction["txType"],
                                 "public_key" => $publicKey,
                                 "registration_fee" => $protoGenerateID->getRegistrationFee(),
+                                "sender" => bin2hex($protoGenerateID->getSender()),
+                                "senderWallet" => $senderWallet,
+                                "version" => $protoGenerateID->getVersion(),
                                 "generateWallet" => $generateWallet
                             ];
                             $payload_obj = new Payload(array_merge($payloadData, ['created_at' => $created_at]));
