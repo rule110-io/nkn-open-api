@@ -28,7 +28,8 @@ class SigchainController extends Controller
     public function showAll(Request $request)
     {
 
-        $paginate = $request->get('per_page', 10);
+        $pageSize = $request->get('per_page', 10);
+        $paginate = min($pageSize, 250);
         $page = $request->has('page') ? $request->query('page') : 1;
 
         $sigchains = Cache::remember('last-' . $paginate . '-sigchains-page-' . $page, config('nkn.update-interval'), function () use ($paginate) {

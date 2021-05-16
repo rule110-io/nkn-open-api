@@ -31,7 +31,8 @@ class BlockController extends Controller
     public function showAll(Request $request)
     {
 
-        $paginate = $request->get('per_page', 10);
+        $pageSize = $request->get('per_page', 10);
+        $paginate = min($pageSize, 250);
         $page = $request->has('page') ? $request->query('page') : 1;
 
         $blocks = Cache::remember('last-' . $paginate . '-blocks-page-' . $page, config('nkn.update-interval'), function () use ($paginate) {
@@ -101,7 +102,8 @@ class BlockController extends Controller
      */
     public function showBlockTransactions($block_id, Request $request)
     {
-        $paginate = $request->get('per_page', 10);
+        $pageSize = $request->get('per_page', 10);
+        $paginate = min($pageSize, 250);
         $page = $request->has('page') ? $request->query('page') : 1;
 
         if (is_numeric($block_id)) {

@@ -25,7 +25,8 @@ class AddressBookItemController extends Controller
      */
     public function showWalletNames(Request $request)
     {
-        $paginate = $request->get('per_page', 10);
+        $pageSize = $request->get('per_page', 10);
+        $paginate = min($pageSize, 250);
         $page = $request->has('page') ? $request->query('page') : 1;
 
         $walletNames = Cache::remember('last-' . $paginate . '-addressBookItems-page-' . $page, config('nkn.update-interval'), function () use ($paginate) {

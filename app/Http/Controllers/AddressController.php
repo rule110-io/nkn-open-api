@@ -32,7 +32,9 @@ class AddressController extends Controller
     public function showAll(Request $request)
     {
 
-        $paginate = $request->get('per_page', 10);
+        $pageSize = $request->get('per_page', 10);
+        $paginate = min($pageSize, 250);
+
         $page = $request->has('page') ? $request->query('page') : 1;
 
         $addresses = Cache::remember('last-' . $paginate . '-addresses-page-' . $page, config('nkn.update-interval'), function () use ($paginate) {
@@ -104,7 +106,8 @@ class AddressController extends Controller
     public function showAddressTransactions($address, Request $request)
     {
         $page = $request->has('page') ? $request->query('page') : 1;
-        $paginate = $request->get('per_page', 10);
+        $pageSize = $request->get('per_page', 10);
+        $paginate = min($pageSize, 250);
         $txType = $request->get('txType');
         $txType = explode(',', $txType);
 

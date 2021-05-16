@@ -33,7 +33,8 @@ class TransactionController extends Controller
     {
         $txType = $request->get('txType');
         $txType = explode(',', $txType);
-        $paginate = $request->get('per_page', 10);
+        $pageSize = $request->get('per_page', 10);
+        $paginate = min($pageSize, 250);
         $page = $request->has('page') ? $request->query('page') : 1;
 
         if ($txType[0]) {
