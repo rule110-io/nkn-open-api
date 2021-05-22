@@ -29,5 +29,6 @@ return [
     'remote-node' => [
         'address' => env('REMOTENODE_ADDR', 'https://mainnet-rpc-node-0001.nkn.org/mainnet/api/wallet'),
         'port' => env('REMOTENODE_PORT', 30003)
-    ]
+    ],
+    'allowed_ips' => explode(',',env('ALLOWED_IPS'))
 ];

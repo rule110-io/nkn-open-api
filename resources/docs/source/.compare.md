@@ -1822,69 +1822,6 @@ Parameter | Status | Description
 
 <!-- END_34c1145d811e7a79d5e95494d60d1aea -->
 
-<!-- START_988a9dfd2fdde5abbeeb8b50c5754a35 -->
-## Count blocks signed by public key
-
-Returns the count of signed blocks on a day by a specific public key.
-
-> Example request:
-
-```bash
-curl -X GET \
-    -G "https://openapi.nkn.org/api/v1/pks/34691fa28d3e261f4f31639ef376365bc57b6583e59224006a568b76f14b947f/blocksSigned?date=aut" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"
-```
-
-```javascript
-const url = new URL(
-    "https://openapi.nkn.org/api/v1/pks/34691fa28d3e261f4f31639ef376365bc57b6583e59224006a568b76f14b947f/blocksSigned"
-);
-
-let params = {
-    "date": "aut",
-};
-Object.keys(params)
-    .forEach(key => url.searchParams.append(key, params[key]));
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers: headers,
-})
-    .then(response => response.json())
-    .then(json => console.log(json));
-```
-
-
-> Example response (500):
-
-```json
-{
-    "message": "Server Error"
-}
-```
-
-### HTTP Request
-`GET api/v1/pks/{pk}/blocksSigned`
-
-#### URL Parameters
-
-Parameter | Status | Description
---------- | ------- | ------- | -------
-    `pk` |  required  | The public key.
-#### Query Parameters
-
-Parameter | Status | Description
---------- | ------- | ------- | -----------
-    `date` |  optional  | Date you want to display (Default today) : 2020-06-01
-
-<!-- END_988a9dfd2fdde5abbeeb8b50c5754a35 -->
-
 #Statistics
 
 
