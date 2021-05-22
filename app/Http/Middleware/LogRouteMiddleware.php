@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use Log;
 
 
-class LogRouteMiddleWare extends Middleware{
+class LogRouteMiddleWare {
     public function handle($request, Closure $next)
     {
         Log::channel('accessRoutes')->info('['.$request->ip().']:'.$request->fullUrl());
