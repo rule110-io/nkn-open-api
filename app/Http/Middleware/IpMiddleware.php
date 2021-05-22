@@ -9,7 +9,7 @@ class IpMiddleware{
     public function handle($request, Closure $next)
     {
 
-        if (!in_array($request->ip(),config('allowed_ips'))) {
+        if (!in_array($request->ip(),config('nkn.allowed_ips'))) {
             abort(403, 'Access denied');
         }
 
