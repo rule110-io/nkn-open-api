@@ -36,9 +36,6 @@ Route::group(['middleware' => 'throttle:25,1'], function () {
     Route::get('addresses/{address}/transactions', 'AddressController@showAddressTransactions');
     Route::get('addresses/{address}/hasMinedToAddress/{beneficiaryAddress}', 'AddressController@hasMinedToAddress');
 
-    Route::get('pks/{pk}/blocksSigned', 'PkController@countBlocks');
-
-
     Route::get('statistics/daily/blocks', 'StatisticsController@dailyBlocks');
     Route::get('statistics/daily/transactions', 'StatisticsController@dailyTransactions');
 
@@ -50,3 +47,5 @@ Route::group(['middleware' => 'throttle:25,1'], function () {
     Route::get('address-book/address/{walletAddress}', 'AddressBookItemController@getNameByAddress');
     Route::get('address-book/name/{walletName}', 'AddressBookItemController@getAddressByName');
 });
+
+Route::get('pks/{pk}/blocksSigned', 'PkController@countBlocks');
