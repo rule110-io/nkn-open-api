@@ -52,6 +52,11 @@ return [
             'path' => storage_path('logs/SyncWithBlockchain.log'),
             'level' => 'info',
         ],
+        'accessRoutes' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/accessRoutes.log'),
+            'level' => 'info',
+        ],
 
         'daily' => [
             'driver' => 'daily',
