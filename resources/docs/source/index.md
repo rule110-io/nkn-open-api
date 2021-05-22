@@ -18,6 +18,10 @@ toc_footers:
 Welcome to the generated API reference.
 [Get Postman Collection](http://openapi.nkn.org/docs/collection.json)
 
+###Preamble
+
+This is the documentation of the open API of the NKN blockchain. The queried data can be used for your own free-to-use projects and for testing purposes. The queried data **cannot** be used in any commercial product. You are free to create your own instance of this API by getting the code under [https://github.com/rule110-io/nkn-open-api/](https://github.com/rule110-io/nkn-open-api)
+
 <!-- END_INFO -->
 
 #Address book
