@@ -13,36 +13,40 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::get('blocks', 'BlockController@showAll');
-Route::get('blocks/{block_id}', 'BlockController@show');
-//get transactions of specific block
-Route::get('blocks/{block_id}/transactions', 'BlockController@showBlockTransactions');
-
-//get all transactions
-Route::get('transactions', 'TransactionController@showAll');
-Route::get('transactions/{tHash}', 'TransactionController@show');
-
-//get all sigchains
-Route::get('sigchains', 'SigchainController@showAll');
-
-//get all addresses
-Route::get('addresses', 'AddressController@showAll');
-//get specific address
-Route::get('addresses/{address}', 'AddressController@show');
-//get transactions of specific address
-Route::get('addresses/{address}/transactions', 'AddressController@showAddressTransactions');
-Route::get('addresses/{address}/hasMinedToAddress/{beneficiaryAddress}', 'AddressController@hasMinedToAddress');
-
-Route::get('pks/{pk}/blocksSigned', 'PkController@countBlocks');
+Route::group(['middleware' => 'throttle:25,1'], function () {
 
 
-Route::get('statistics/daily/blocks', 'StatisticsController@dailyBlocks');
-Route::get('statistics/daily/transactions', 'StatisticsController@dailyTransactions');
+    Route::get('blocks', 'BlockController@showAll');
+    Route::get('blocks/{block_id}', 'BlockController@show');
+    //get transactions of specific block
+    Route::get('blocks/{block_id}/transactions', 'BlockController@showBlockTransactions');
 
-Route::get('statistics/avgtxfee', 'StatisticsController@avgTxFee');
-Route::get('statistics/counts', 'StatisticsController@countBlocksTransactions');
-Route::get('statistics/supply', 'StatisticsController@getSupply');
+    //get all transactions
+    Route::get('transactions', 'TransactionController@showAll');
+    Route::get('transactions/{tHash}', 'TransactionController@show');
 
-Route::get('address-book', 'AddressBookItemController@showWalletNames');
-Route::get('address-book/address/{walletAddress}', 'AddressBookItemController@getNameByAddress');
-Route::get('address-book/name/{walletName}', 'AddressBookItemController@getAddressByName');
+    //get all sigchains
+    Route::get('sigchains', 'SigchainController@showAll');
+
+    //get all addresses
+    Route::get('addresses', 'AddressController@showAll');
+    //get specific address
+    Route::get('addresses/{address}', 'AddressController@show');
+    //get transactions of specific address
+    Route::get('addresses/{address}/transactions', 'AddressController@showAddressTransactions');
+    Route::get('addresses/{address}/hasMinedToAddress/{beneficiaryAddress}', 'AddressController@hasMinedToAddress');
+
+    Route::get('pks/{pk}/blocksSigned', 'PkController@countBlocks');
+
+
+    Route::get('statistics/daily/blocks', 'StatisticsController@dailyBlocks');
+    Route::get('statistics/daily/transactions', 'StatisticsController@dailyTransactions');
+
+    Route::get('statistics/avgtxfee', 'StatisticsController@avgTxFee');
+    Route::get('statistics/counts', 'StatisticsController@countBlocksTransactions');
+    Route::get('statistics/supply', 'StatisticsController@getSupply');
+
+    Route::get('address-book', 'AddressBookItemController@showWalletNames');
+    Route::get('address-book/address/{walletAddress}', 'AddressBookItemController@getNameByAddress');
+    Route::get('address-book/name/{walletName}', 'AddressBookItemController@getAddressByName');
+});
