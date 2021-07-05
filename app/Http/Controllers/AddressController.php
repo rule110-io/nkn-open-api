@@ -41,9 +41,9 @@ class AddressController extends Controller
             return AddressStatistic::select('address', 'transaction_count as count_transactions', 'first_transaction', 'last_transaction', 'balance')->orderBy('last_transaction', 'desc')->simplePaginate($paginate);
         });
         $count = Cache::remember('sumAddresses', config('nkn.update-interval'), function (){
-            return DB::table('address_statistics')->count();
+            $temp = DB::table('address_statistics')->count();
+            return $count[0]->count;
         });
-        dd($count[0]);
         // Create a response and modify a header value
         $response = response()->json([
             'addresses' => $addresses,
