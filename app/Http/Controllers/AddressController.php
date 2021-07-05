@@ -41,13 +41,13 @@ class AddressController extends Controller
             return AddressStatistic::select('address', 'transaction_count as count_transactions', 'first_transaction', 'last_transaction', 'balance')->orderBy('last_transaction', 'desc')->simplePaginate($paginate);
         });
         $count = Cache::remember('sumAddresses', config('nkn.update-interval'), function (){
-            $temp = DB::table('address_statistics')->count();
-            return $count[0]->count;
+            return AddressStatistic::select(DB::raw("MAX(id)"))
+                ->get();
         });
         // Create a response and modify a header value
         $response = response()->json([
             'addresses' => $addresses,
-            'sumAddresses' => $count
+            'sumAddresses' => $count[0]->max,
         ]);
 
         return $response;

@@ -125,14 +125,15 @@ class StatisticsController extends Controller
         });
         $rawQuery = "SELECT reltuples AS COUNT FROM row_counts WHERE relname='address_statistics';";
         $txs2 = Cache::remember('sumAddresses', config('nkn.update-interval'), function () use ($rawQuery) {
-            return DB::select(DB::raw($rawQuery));
+            return AddressStatistic::select(DB::raw("MAX(id)"))
+                ->get();
         });
 
         // Create a response and modify a header value
         $response = response()->json([
             'blockCount' => $blocks[0]->max,
             'txCount' => $txs[0]->count,
-            'addressCount' => $txs2[0]->count,
+            'addressCount' => $txs2[0]->max,
         ]);
 
         return $response;
