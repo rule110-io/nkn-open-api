@@ -47,7 +47,7 @@ class AddressController extends Controller
         // Create a response and modify a header value
         $response = response()->json([
             'addresses' => $addresses,
-            'sumAddresses' => $count
+            'sumAddresses' => $count->count
         ]);
 
         return $response;
