@@ -43,10 +43,11 @@ class AddressController extends Controller
         $count = Cache::remember('sumAddresses', config('nkn.update-interval'), function (){
             return DB::table('address_statistics')->count();
         });
+        dd($count[0]);
         // Create a response and modify a header value
         $response = response()->json([
             'addresses' => $addresses,
-            'sumAddresses' => $count[0]->count
+            'sumAddresses' => $count
         ]);
 
         return $response;
