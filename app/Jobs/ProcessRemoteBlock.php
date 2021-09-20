@@ -502,7 +502,7 @@ class ProcessRemoteBlock implements ShouldQueue
                             $identifier = bin2hex($protoUnsubscribe->getIdentifier());
                             $topic = bin2hex($protoUnsubscribe->getTopic());
 
-                            $subscriber = bin2hex($protoSubscribe->getSubscriber());
+                            $subscriber = bin2hex($protoUnsubscribe->getSubscriber());
                             $subscriberWallet = PubKey2Wallet::encode($subscriber);
 
                             $payloadData = [
