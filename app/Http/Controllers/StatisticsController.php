@@ -97,7 +97,7 @@ class StatisticsController extends Controller
     public function avgTxFee()
     {
         $rawQuery = "SELECT avg(s.fee) as avgfee ";
-        $rawQuery .= "FROM ( SELECT fee FROM transactions WHERE \"txType\" = 'TRANSFER_ASSET_TYPE' ORDER BY created_at DESC LIMIT 200) as s;";
+        $rawQuery .= "FROM ( SELECT fee FROM transactions ORDER BY created_at DESC LIMIT 200) as s;";
 
         $tx = Cache::remember('avgTxFee', 600, function ()  use ($rawQuery) {
             return DB::select(DB::raw($rawQuery));
