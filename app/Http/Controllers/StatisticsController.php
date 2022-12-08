@@ -146,7 +146,7 @@ class StatisticsController extends Controller
      *
      */
 
-    public function getSupply()
+    public function getSupply(Request $request)
     {
         $result = Cache::remember('supply_data', config('nkn.update-interval'), function () {
             return AddressStatistic::select(
@@ -155,6 +155,10 @@ class StatisticsController extends Controller
             )
                 ->get();
         });
+
+        if($request->get('q') == 'totalsupply'){
+            return response()->json($result[0]->total_supply/100000000);
+        }
 
         // Create a response and modify a header value
         $response = response()->json([
