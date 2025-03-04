@@ -8,6 +8,15 @@ use Illuminate\Http\Request;
 
 class DailyActiveWalletController extends Controller
 {
+    /**
+     * Get daily active wallets
+     *
+     * Returns daily active wallets for the last 3 months or a specific time period based on the provided start and end dates.
+     *
+     * @queryParam start_date Date of the start of the time period  Example: 2025-03-04
+     * @queryParam end_date Date of the end of the time period  Example: 2025-03-10
+     *
+     */
     public function index(Request $request)
     {
         $request->validate([
