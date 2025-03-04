@@ -2,46 +2,47 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-
-use GuzzleHttp\Client as GuzzleHttpClient;
-use GuzzleHttp\Exception\RequestException;
-
+use Log;
+use Cache;
 use App\Block;
-use App\Transaction;
 use App\Header;
-use App\Program;
 use App\Payload;
+
+use App\Program;
 use App\Sigchain;
+
+use Carbon\Carbon;
+use App\Transaction;
 use App\SigchainElem;
 use App\AddressBookItem;
 use App\AddressStatistic;
-
+use App\DailyActiveWallet;
 use App\Events\BlockEvent;
-use App\Events\CoinbaseTxEvent;
-use App\Events\SigChainTxEvent;
-use App\Events\TransferAssetTxEvent;
-use App\Events\RegisterNameTxEvent;
-use App\Events\TransferNameTxEvent;
-use App\Events\DeleteNameTxEvent;
-use App\Events\SubscribeTxEvent;
-use App\Events\UnsubscribeTxEvent;
+use Illuminate\Bus\Queueable;
 use App\Events\NanoPayTxEvent;
-use App\Events\GenerateIdTxEvent;
-use App\Events\IssueAssetTxEvent;
 
 use App\Helpers\PubKey2Wallet;
-
+use App\Events\CoinbaseTxEvent;
+use App\Events\SigChainTxEvent;
+use App\Events\SubscribeTxEvent;
 use App\Jobs\SyncAddressBalance;
+use App\Events\DeleteNameTxEvent;
+use App\Events\GenerateIdTxEvent;
+use App\Events\IssueAssetTxEvent;
+use App\Events\UnsubscribeTxEvent;
+use App\Events\RegisterNameTxEvent;
+use App\Events\TransferNameTxEvent;
+use App\Events\TransferAssetTxEvent;
 
-use Carbon\Carbon;
+use Illuminate\Queue\SerializesModels;
 
-use Log;
-use Cache;
+use Illuminate\Queue\InteractsWithQueue;
+
+use GuzzleHttp\Client as GuzzleHttpClient;
+
+use GuzzleHttp\Exception\RequestException;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 
 
 class ProcessRemoteBlock implements ShouldQueue
@@ -672,6 +673,18 @@ class ProcessRemoteBlock implements ShouldQueue
         } catch (RequestException $re) {
             Log::channel('syncWithBlockchain')->error("ProcessRemoteBlock: Can't connect to testnet-node!");
             throw $re;
+        }
+        if (!empty($addresses_involved)) {
+            $today = Carbon::createFromTimestamp($created_at)->format('Y-m-d');
+            $uniqueAddresses = array_unique($addresses_involved);
+
+            $dailyWallets = DailyActiveWallet::firstOrNew(['date' => $today]);
+            $existingWallets = $dailyWallets->active_wallets ?? [];
+            $updatedWallets = array_unique(array_merge($existingWallets, $uniqueAddresses));
+
+            $dailyWallets->active_wallets = $updatedWallets;
+            $dailyWallets->count = count($updatedWallets);
+            $dailyWallets->save();
         }
     }
     public function tags()
