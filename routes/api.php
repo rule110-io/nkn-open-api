@@ -52,7 +52,7 @@ Route::group(['middleware' => 'ipblock'], function () {
     Route::get('address-book/address/{walletAddress}', 'AddressBookItemController@getNameByAddress');
     Route::get('address-book/name/{walletName}', 'AddressBookItemController@getAddressByName');
 
-    Route::get('/daily-active-wallets', 'DailyActiveWalletController@index');
+    Route::get('daily-active-wallets', 'DailyActiveWalletController@index');
 
 
     Route::get('pks/{pk}/blocksSigned', 'PkController@countBlocks');
